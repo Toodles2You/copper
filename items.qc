@@ -534,7 +534,10 @@ void(entity e) target_items_giveinv =
 	bound_ammo(e);
 	
 	if (self.svflags)
+	{
 		serverflags |= zeroconvert(self.svflags);
+		SetAllClientRunes ();
+	}
 
 	if (self.items)
 	{
@@ -614,6 +617,7 @@ float(entity e) target_items_takeinv =
 	{
 		float sf = zeroconvert(self.svflags);
 		serverflags = not(serverflags, sf);
+		SetAllClientRunes ();
 	}
 	
 
@@ -718,6 +722,7 @@ void(entity e) target_items_setinv =
 	if (self.svflags)
 	{
 		serverflags = zeroconvert(self.svflags);		
+		SetAllClientRunes ();
 	}
 
 	if (self.ammo_shells) e.ammo_shells = zeroconvert(self.ammo_shells);

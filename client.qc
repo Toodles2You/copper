@@ -65,6 +65,7 @@ void() SetChangeParms =
 	parm7 = self.ammo_cells;
 	parm8 = self.weapon;
 	parm9 = self.armortype;
+	parm10 = self.items2;
 
 }
 
@@ -79,7 +80,7 @@ void() SetNewParms =
 	parm6 = 0;
 	parm7 = 0;
 	parm9 = 0;
-//	parm10 = 0;
+	parm10 = 0;
 }
 
 
@@ -100,7 +101,7 @@ void() SetCoopParms =
 	parm6 = 0;
 	parm7 = 0;
 	parm9 = 0;
-//	parm10 = 0;
+	parm10 = 0;
 }
 
 void() DecodeLevelParms =
@@ -117,6 +118,7 @@ void() DecodeLevelParms =
 	self.ammo_rockets = parm6;
 	self.ammo_cells = parm7;
 	self.armortype = parm9;
+	self.items2 = parm10;
 	
 	//self.weapon = parm8;
 	W_Select(parm8);
@@ -562,6 +564,46 @@ entity() SelectSpawnPoint =
 	return spot;
 }
 
+/*
+===========
+SetClientRunes
+
+stuff the rune bits into the high bits of items for sbar
+============
+*/
+void(entity client) SetClientRunes =
+{
+	float i;
+
+	for (i = SVFL_EPISODE1; i <= SVFL_EPISODE4; i *= 2)
+	{
+		if (serverflags & i)
+		{
+			client.items2 |= i * 32;
+		}
+		else
+		{
+			client.items2 = not (client.items2, i * 32);
+		}
+	}
+}
+
+/*
+===========
+SetAllClientRunes
+
+called any time a rune flag is updated
+============
+*/
+void() SetAllClientRunes =
+{
+	entity e = nextent (world);
+	while (e.flags & FL_CLIENT)
+	{
+		SetClientRunes (e);
+		e = nextent(e);
+	}
+}
 
 /*
 ===========
@@ -603,6 +645,8 @@ void() PutClientInServer =
 	
 	// put global key type in the high bits so the CSQC hud gets to see it :/
 	self.worldtype = (self.worldtype & 255) + world.worldtype * 256;
+
+	SetClientRunes (self);
 
 	// we respawned with keys not taken away, make sure .items reflects this
 	if (self.worldtype & 15) self.items |= IT_KEY1;

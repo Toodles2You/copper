@@ -311,6 +311,7 @@ void() shub_finale_4 =
 		intermission_exittime = time + 3;
 		intermission = 2;
 		serverflags = 0;	// clear all the runes and stuff
+		SetAllClientRunes ();
 		
 		// start the end text
 		WriteByte (MSG_ALL, SVC_FINALE);

@@ -347,6 +347,7 @@ void() sigil_touch =
 	serverflags |= self.svflags;
 	self.classname = string_null;		// so rune doors won't find it
 	
+	SetAllClientRunes ();
 	
 	activator = other;
 	SUB_UseTargets();				// fire all targets / killtargets

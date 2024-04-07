@@ -162,6 +162,7 @@ void() ServerflagsCommand =
 {
 	serverflags = serverflags * 2 + 1;
 	dev_serverflags();
+	SetAllClientRunes ();
 };
 
 
