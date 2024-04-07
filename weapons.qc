@@ -72,21 +72,173 @@ void() SuperDamageSound =
 
 // ==================================================================
 
+/*
+=============
+W_ItemForWeapon
+
+Returns the weapon's corresponding items and/or items2 flags stored in a vector
+=============
+*/
+vector(float weap) W_ItemForWeapon =
+{
+	vector fl;
+
+	fl_x = 0;
+	fl_y = 0;
+	fl_z = 0;
+
+	switch (weap)
+	{
+		case WPN_AXE:
+			fl_x = IT_AXE;
+			break;
+		case WPN_SHOTGUN:
+			fl_x = IT_SHOTGUN;
+			break;
+		case WPN_SUPER_SHOTGUN:
+			fl_x = IT_SUPER_SHOTGUN;
+			break;
+		case WPN_NAILGUN:
+			fl_x = IT_NAILGUN;
+			break;
+		case WPN_SUPER_NAILGUN:
+			fl_x = IT_SUPER_NAILGUN;
+			break;
+		case WPN_GRENADE_LAUNCHER:
+			fl_x = IT_GRENADE_LAUNCHER;
+			break;
+		case WPN_ROCKET_LAUNCHER:
+			fl_x = IT_ROCKET_LAUNCHER;
+			break;
+		case WPN_LIGHTNING:
+			fl_x = IT_LIGHTNING;
+			break;
+		default:
+			break;
+	}
+
+	return fl;
+}
+
+/*
+=============
+W_WeaponForItem
+
+Returns the items and/or items2 flags' corresponding weapon
+=============
+*/
+float(float item, float item2) W_WeaponForItem =
+{
+	float weap;
+
+	weap = WPN_NONE;
+
+	switch (item)
+	{
+		case IT_AXE:
+			weap = WPN_AXE;
+			break;
+		case IT_SHOTGUN:
+			weap = WPN_SHOTGUN;
+			break;
+		case IT_SUPER_SHOTGUN:
+			weap = WPN_SUPER_SHOTGUN;
+			break;
+		case IT_NAILGUN:
+			weap = WPN_NAILGUN;
+			break;
+		case IT_SUPER_NAILGUN:
+			weap = WPN_SUPER_NAILGUN;
+			break;
+		case IT_GRENADE_LAUNCHER:
+			weap = WPN_GRENADE_LAUNCHER;
+			break;
+		case IT_ROCKET_LAUNCHER:
+			weap = WPN_ROCKET_LAUNCHER;
+			break;
+		case IT_LIGHTNING:
+			weap = WPN_LIGHTNING;
+			break;
+		default:
+			break;
+	}
+
+	return weap;
+}
+
+/*
+=============
+W_HasWeapon
+
+Returns TRUE if the entity has the specified weapon
+=============
+*/
+float(entity who, float weap) W_HasWeapon =
+{
+	vector fl;
+
+	fl = W_ItemForWeapon (weap);
+
+	if (fl_y != 0 && (who.items2 & fl_y) != fl_y)
+	{
+		return FALSE;
+	}
+
+	if (fl_x != 0 && (who.items & fl_x) != fl_x)
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/*
+=============
+W_SetHasWeapon
+
+Gives or takes a weapon from the entity, returning TRUE if the state was changed
+=============
+*/
+float(entity who, float weap, float canihas) W_SetHasWeapon =
+{
+	vector fl;
+
+	if (canihas == W_HasWeapon (who, weap))
+	{
+		return FALSE;
+	}
+
+	fl = W_ItemForWeapon (weap);
+
+	if (canihas)
+	{
+		who.items |= fl_x;
+		who.items2 |= fl_y;
+	}
+	else
+	{
+		who.items = not (who.items, fl_x);
+		who.items2 = not (who.items2, fl_y);
+	}
+
+	return TRUE;
+}
+
 float(float w) W_RankForWeapon =
 {
 	if (!w)
 		return 666;
-	if (w == IT_LIGHTNING)
+	if (w == WPN_LIGHTNING)
 		return 1;
-	if (w == IT_ROCKET_LAUNCHER)
+	if (w == WPN_ROCKET_LAUNCHER)
 		return 2;
-	if (w == IT_SUPER_NAILGUN)
+	if (w == WPN_SUPER_NAILGUN)
 		return 3;
-	if (w == IT_GRENADE_LAUNCHER)
+	if (w == WPN_GRENADE_LAUNCHER)
 		return 4;
-	if (w == IT_SUPER_SHOTGUN)
+	if (w == WPN_SUPER_SHOTGUN)
 		return 5;
-	if (w == IT_NAILGUN)
+	if (w == WPN_NAILGUN)
 		return 6;
 	return 7;
 }
@@ -106,10 +258,10 @@ void(entity e, float new) W_BetterWeapon =
 		// don't switch to explosive weapons with quad
 		// 1.12: don't switch to explosives when invisible either, since you can't see the stupid viewmodel
 		if ( (has_quad(e) || has_invis(e)) &&
-			(new == IT_ROCKET_LAUNCHER || new == IT_GRENADE_LAUNCHER))
+			(new == WPN_ROCKET_LAUNCHER || new == WPN_GRENADE_LAUNCHER))
 			return;
 		// don't switch to a lightning gun when standing in water
-		if (e.waterlevel >= 2 && new == IT_LIGHTNING)
+		if (e.waterlevel >= 2 && new == WPN_LIGHTNING)
 			return;
 	}	
 	self = e;
@@ -120,14 +272,14 @@ void(entity e, float new) W_BetterWeapon =
 
 float(float weap) W_HasAmmo =
 {
-	if (!weap || weap == IT_AXE) return TRUE;
+	if (weap == WPN_NONE || weap == WPN_AXE) return TRUE;
 	
-	if (weap == IT_SUPER_SHOTGUN)	return (self.ammo_shells >= 2);
-	if (weap == IT_SHOTGUN)			return (self.ammo_shells >= 1);
-	if (weap == IT_NAILGUN)			return (self.ammo_nails >= 1);
-	if (weap == IT_SUPER_NAILGUN)	return (self.ammo_nails >= 2);
-	if (weap == IT_LIGHTNING)		return (self.ammo_cells >= 1);
-	if (weap == IT_GRENADE_LAUNCHER || weap == IT_ROCKET_LAUNCHER)
+	if (weap == WPN_SUPER_SHOTGUN)	return (self.ammo_shells >= 2);
+	if (weap == WPN_SHOTGUN)		return (self.ammo_shells >= 1);
+	if (weap == WPN_NAILGUN)		return (self.ammo_nails >= 1);
+	if (weap == WPN_SUPER_NAILGUN)	return (self.ammo_nails >= 2);
+	if (weap == WPN_LIGHTNING)		return (self.ammo_cells >= 1);
+	if (weap == WPN_GRENADE_LAUNCHER || weap == WPN_ROCKET_LAUNCHER)
 		return (self.ammo_rockets >= 1);
 		
 	return FALSE;
@@ -135,26 +287,26 @@ float(float weap) W_HasAmmo =
 
 float() W_BestWeapon =
 {
-	if(self.items & (IT_SUPER_NAILGUN) && W_HasAmmo(IT_SUPER_NAILGUN))
-		return IT_SUPER_NAILGUN;
-	if(self.items & (IT_SUPER_SHOTGUN) && W_HasAmmo (IT_SUPER_SHOTGUN))
-		return IT_SUPER_SHOTGUN;
+	if(W_HasWeapon (self, WPN_SUPER_NAILGUN) && W_HasAmmo(WPN_SUPER_NAILGUN))
+		return WPN_SUPER_NAILGUN;
+	if(W_HasWeapon (self, WPN_SUPER_SHOTGUN) && W_HasAmmo (WPN_SUPER_SHOTGUN))
+		return WPN_SUPER_SHOTGUN;
 
-	if (self.items & (IT_LIGHTNING) && self.waterlevel <= 1 && W_HasAmmo(IT_LIGHTNING))
-		return IT_LIGHTNING;
-	if(self.items & (IT_NAILGUN) && W_HasAmmo(IT_NAILGUN))
-		return IT_NAILGUN;
-	if(self.items & (IT_SHOTGUN) && W_HasAmmo(IT_SHOTGUN))
-		return IT_SHOTGUN;
-	if (self.items & IT_AXE)
-		return IT_AXE;
+	if (W_HasWeapon (self, WPN_LIGHTNING) && self.waterlevel <= 1 && W_HasAmmo(WPN_LIGHTNING))
+		return WPN_LIGHTNING;
+	if(W_HasWeapon (self, WPN_NAILGUN) && W_HasAmmo(WPN_NAILGUN))
+		return WPN_NAILGUN;
+	if(W_HasWeapon (self, WPN_SHOTGUN) && W_HasAmmo(WPN_SHOTGUN))
+		return WPN_SHOTGUN;
+	if (W_HasWeapon (self, WPN_AXE))
+		return WPN_AXE;
 		
-	if(self.items & (IT_ROCKET_LAUNCHER) && W_HasAmmo(IT_ROCKET_LAUNCHER))
-		return IT_ROCKET_LAUNCHER;
-	if(self.items & (IT_GRENADE_LAUNCHER) && W_HasAmmo (IT_GRENADE_LAUNCHER))
-		return IT_GRENADE_LAUNCHER;
+	if(W_HasWeapon (self, WPN_ROCKET_LAUNCHER) && W_HasAmmo(WPN_ROCKET_LAUNCHER))
+		return WPN_ROCKET_LAUNCHER;
+	if(W_HasWeapon (self, WPN_GRENADE_LAUNCHER) && W_HasAmmo (WPN_GRENADE_LAUNCHER))
+		return WPN_GRENADE_LAUNCHER;
 		
-	return 0;
+	return WPN_NONE;
 }
 
 void() W_SelectBestWeapon =
@@ -164,9 +316,9 @@ void() W_SelectBestWeapon =
 
 void() W_SelectBestShotgun =
 {
-	if (self.items & (IT_SHOTGUN|IT_SUPER_SHOTGUN))
+	if (W_HasWeapon (self, WPN_SHOTGUN) || W_HasWeapon (self, WPN_SUPER_SHOTGUN))
 	{
-		if (!W_Select(IT_SHOTGUN) && !W_Select(IT_SUPER_SHOTGUN))
+		if (!W_Select(WPN_SHOTGUN) && !W_Select(WPN_SUPER_SHOTGUN))
 			sprint (self, "not enough ammo.\n");
 	}
 	else
@@ -177,9 +329,9 @@ void() W_SelectBestShotgun =
 
 void() W_SelectBestNailgun =
 {
-	if (self.items & (IT_NAILGUN|IT_SUPER_NAILGUN))
+	if (W_HasWeapon (self, WPN_NAILGUN) || W_HasWeapon (self, WPN_SUPER_NAILGUN))
 	{
-		if (!W_Select(IT_NAILGUN) && !W_Select(IT_SUPER_NAILGUN))
+		if (!W_Select(WPN_NAILGUN) && !W_Select(WPN_SUPER_NAILGUN))
 			sprint (self, "not enough ammo.\n");
 	}
 	else
@@ -196,76 +348,26 @@ W_ChangeWeapon
 */
 void() W_ChangeWeapon =
 {
-	local	float	it, am, fl;
+	float weap;
 	
 	if (self.customflags & CFL_PLUNGE)
 		return;
-		
-	it = self.items;
-	am = 0;
-	
-	if (self.impulse == 1)
-	{
-		fl = IT_AXE;
-	}
-	else if (self.impulse == 2)
-	{
-		fl = IT_SHOTGUN;
-		if (self.ammo_shells < 1)
-			am = 1;
-	}
-	else if (self.impulse == 3)
-	{
-		fl = IT_SUPER_SHOTGUN;
-		if (self.ammo_shells < 2)
-			am = 1;
-	}		
-	else if (self.impulse == 4)
-	{
-		fl = IT_NAILGUN;
-		if (self.ammo_nails < 1)
-			am = 1;
-	}
-	else if (self.impulse == 5)
-	{
-		fl = IT_SUPER_NAILGUN;
-		if (self.ammo_nails < 2)
-			am = 1;
-	}
-	else if (self.impulse == 6)
-	{
-		fl = IT_GRENADE_LAUNCHER;
-		if (self.ammo_rockets < 1)
-			am = 1;
-	}
-	else if (self.impulse == 7)
-	{
-		fl = IT_ROCKET_LAUNCHER;
-		if (self.ammo_rockets < 1)
-			am = 1;
-	}
-	else if (self.impulse == 8)
-	{
-		fl = IT_LIGHTNING;
-		if (self.ammo_cells < 1)
-			am = 1;
-	}
 
-	self.impulse = 0;
-	
-	if (!(self.items & fl))
+	weap = self.impulse;
+
+	if (!W_HasWeapon (self, weap))
 	{	// don't have the weapon or the ammo
 		sprint (self, "no weapon.\n");
 		return;
 	}
 	
-	if (am)
+	if (!W_HasAmmo (weap))
 	{	// don't have the ammo
 		sprint (self, "not enough ammo.\n");
 		return;
 	}
 
-	W_Select(fl);
+	W_Select(weap);
 }
 
 /*
@@ -277,28 +379,25 @@ for players who insist on shuffling through their inventory the slow way
 */
 float W_Next(float w) =
 {
-	if (w == IT_AXE) return IT_SHOTGUN;
-	else if (w == IT_LIGHTNING) return IT_AXE;
-	else return w * 2;
+	if (w == WPN_LAST) return WPN_FIRST;
+	return w + 1;
 }
 
 float W_Prev(float w) =
 {
-	if (w == IT_SHOTGUN) return IT_AXE;
-	else if (w == IT_AXE) return IT_LIGHTNING;
-	else return w / 2;
+	if (w == WPN_FIRST) return WPN_LAST;
+	return w - 1;
 }
 
 // cycle weapon up
 void() CycleWeaponCommand =
 {
 	float weap = self.weapon;
-	self.impulse = 0;
 	if (!weap)
 		weap = W_BestWeapon();
 	else do {
 		weap = W_Next(weap);
-		if (self.items & weap && W_HasAmmo(weap))
+		if (W_HasWeapon (self, weap) && W_HasAmmo(weap))
 			break;
 	} while (weap != self.weapon);
 	W_Select (weap);
@@ -308,12 +407,11 @@ void() CycleWeaponCommand =
 void() CycleWeaponReverseCommand =
 {
 	float weap = self.weapon;
-	self.impulse = 0;
 	if (!weap)
 		weap = W_BestWeapon();
 	else do {
 		weap = W_Prev(weap);
-		if (self.items & weap && W_HasAmmo(weap))
+		if (W_HasWeapon (self, weap) && W_HasAmmo(weap))
 			break;
 	} while (weap != self.weapon);
 	W_Select (weap);
@@ -330,22 +428,22 @@ void() W_SetCurrentAmmo =
 {
 	self.items = self.items - ( self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS) );
 	
-	if (self.weapon == IT_SHOTGUN || self.weapon == IT_SUPER_SHOTGUN)
+	if (self.weapon == WPN_SHOTGUN || self.weapon == WPN_SUPER_SHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
 		self.items = self.items | IT_SHELLS;
 	}
-	else if (self.weapon == IT_NAILGUN || self.weapon == IT_SUPER_NAILGUN)
+	else if (self.weapon == WPN_NAILGUN || self.weapon == WPN_SUPER_NAILGUN)
 	{
 		self.currentammo = self.ammo_nails;
 		self.items = self.items | IT_NAILS;
 	}
-	else if (self.weapon == IT_GRENADE_LAUNCHER || self.weapon == IT_ROCKET_LAUNCHER)
+	else if (self.weapon == WPN_GRENADE_LAUNCHER || self.weapon == WPN_ROCKET_LAUNCHER)
 	{
 		self.currentammo = self.ammo_rockets;
 		self.items = self.items | IT_ROCKETS;
 	}
-	else if (self.weapon == IT_LIGHTNING)
+	else if (self.weapon == WPN_LIGHTNING)
 	{
 		self.currentammo = self.ammo_cells;
 		self.items = self.items | IT_CELLS;
@@ -364,21 +462,21 @@ void() W_ResetWeaponState =
 	//self.attack_finished = 0;	// don't lose attack debounce time from last attack,
 		// if any, or picking up/switching weapons can cause double attacks
 	
-	if (self.weapon == IT_AXE )
+	if (self.weapon == WPN_AXE )
 		self.weaponmodel = "progs/v_axe2.mdl";
-	else if (self.weapon == IT_SHOTGUN)
+	else if (self.weapon == WPN_SHOTGUN)
 		self.weaponmodel = "progs/v_shot.mdl";
-	else if (self.weapon == IT_SUPER_SHOTGUN)
+	else if (self.weapon == WPN_SUPER_SHOTGUN)
 		self.weaponmodel = "progs/v_shot2.mdl";
-	else if (self.weapon == IT_NAILGUN)
+	else if (self.weapon == WPN_NAILGUN)
 		self.weaponmodel = "progs/v_nail.mdl";
-	else if (self.weapon == IT_SUPER_NAILGUN)
+	else if (self.weapon == WPN_SUPER_NAILGUN)
 		self.weaponmodel = "progs/v_nail2.mdl";
-	else if (self.weapon == IT_GRENADE_LAUNCHER)
+	else if (self.weapon == WPN_GRENADE_LAUNCHER)
 		self.weaponmodel = "progs/v_rock.mdl";
-	else if (self.weapon == IT_ROCKET_LAUNCHER)
+	else if (self.weapon == WPN_ROCKET_LAUNCHER)
 		self.weaponmodel = "progs/v_rock2.mdl";
-	else if (self.weapon == IT_LIGHTNING)
+	else if (self.weapon == WPN_LIGHTNING)
 		self.weaponmodel = "progs/v_light.mdl";
 	else
 		self.weaponmodel = string_null;
@@ -400,10 +498,10 @@ This should be the only function that changes .weapon
 */
 float(float weap) W_Select =
 {
-	if (weap)
+	if (weap != WPN_NONE)
 	{
 		if (self.weapon == weap) return TRUE;
-		if (self.items & weap == 0) return FALSE;
+		if (!W_HasWeapon(self, weap)) return FALSE;
 		if (!W_HasAmmo(weap)) return FALSE;
 		self.attack_state = self.weapon;
 	}
@@ -425,10 +523,10 @@ An attack impulse can be triggered now
 */
 void() W_Attack =
 {
-	if (self.weapon && !W_HasAmmo(self.weapon))
+	if (self.weapon != WPN_NONE && !W_HasAmmo(self.weapon))
 	{
 		W_SelectBestWeapon();
-		if (!self.weapon || self.weapon == IT_AXE)
+		if (self.weapon == WPN_NONE || self.weapon == WPN_AXE)
 		{
 			sprint (self, "not enough ammo.\n");
 			return;
@@ -439,7 +537,7 @@ void() W_Attack =
 
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 
-	if (self.weapon == IT_AXE)
+	if (self.weapon == WPN_AXE)
 	{
 		player_axe();
 		W_AxeSwing();
@@ -449,33 +547,32 @@ void() W_Attack =
 	// moved after axe so that silent swings don't wake monsters
 	self.show_hostile = time + 1;
 	
-	if (self.weapon == IT_SHOTGUN)
+	if (self.weapon == WPN_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireShotgun ();
 	}
-	else if (self.weapon == IT_SUPER_SHOTGUN)
+	else if (self.weapon == WPN_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireSuperShotgun ();
 	}
-	else if (self.weapon == IT_NAILGUN || self.weapon == IT_SUPER_NAILGUN)
+	else if (self.weapon == WPN_NAILGUN || self.weapon == WPN_SUPER_NAILGUN)
 	{
 		player_nail();
 		W_FireSpikes ();
 	}
-	else if (self.weapon == IT_GRENADE_LAUNCHER)
+	else if (self.weapon == WPN_GRENADE_LAUNCHER)
 	{
 		player_rocket1();
 		W_FireGrenade();
 	}
-	else if (self.weapon == IT_ROCKET_LAUNCHER)
+	else if (self.weapon == WPN_ROCKET_LAUNCHER)
 	{
 		player_rocket1();
 		W_FireRocket();
 	}
-
-	else if (self.weapon == IT_LIGHTNING)
+	else if (self.weapon == WPN_LIGHTNING)
 	{
 		player_light1();
 		self.attack_finished = time + 0.1;

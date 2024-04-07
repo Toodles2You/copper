@@ -33,19 +33,14 @@ void() Cheat_Items =
 	self.ammo_rockets = MAX_AMMO_ROCKETS;
 	self.ammo_cells = MAX_AMMO_CELLS;
 	
-	self.items = self.items |
-	//	IT_KEY1 | IT_KEY2 | 
-		IT_AXE |
-		IT_SHOTGUN |
-		IT_SUPER_SHOTGUN |
-		IT_NAILGUN |
-		IT_SUPER_NAILGUN |
-		IT_GRENADE_LAUNCHER |
-		IT_ROCKET_LAUNCHER;
+	float i;
 
-	self.items = self.items | IT_LIGHTNING;
+	for (i = WPN_FIRST; i <= WPN_LAST; i++)
+	{
+		W_SetHasWeapon (self, i, TRUE);
+	}
 
-	W_Select(IT_ROCKET_LAUNCHER);
+	W_Select(WPN_ROCKET_LAUNCHER);
 
 	stuffcmd(self,"bf\n");
 }
@@ -173,9 +168,10 @@ void() ImpulseCommands =
 {
 	if (!self.impulse) return;
 	
-	if (self.impulse < 9)
+	if (self.impulse >= 1 && self.impulse <= 8)
 	{
-		W_ChangeWeapon();
+		W_ChangeWeapon ();
+	}
 	}
 	else if (self.impulse >= 20 && self.impulse <= 39)
 	{

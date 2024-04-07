@@ -59,15 +59,20 @@ void() BackpackTouch =
 	
 	sprint (other, "You got ");
 
-	if (self.items && (other.items & self.items) == 0)
+	// backwards compatibility
+	if (!self.weapon && self.items)
+	{
+		self.weapon = W_WeaponForItem (self.items, 0);
+	}
+
+	if (self.weapon != WPN_NONE && W_SetHasWeapon (other, self.weapon, TRUE))
 	{
 		acount = TRUE;
-		other.items |= self.items;
 		sprint (other, "the ");
 		sprint (other, self.netname);
 	
 		// change to the weapon
-		W_BetterWeapon(other, self.items);
+		W_BetterWeapon(other, self.weapon);
 	}
 
 	if (self.armorvalue)
@@ -259,22 +264,27 @@ void() DropBackpack =
 	
 	if (coop != 1)
 	{
-		item.items = self.weapon;
-		if (item.items == IT_AXE)
+		float weap = self.weapon;
+		item.weapon = weap;
+		
+		vector fl = W_ItemForWeapon (weap);
+		item.items = fl_x;
+		
+		if (weap == WPN_AXE)
 			item.netname = string_null;
-		else if (item.items == IT_SHOTGUN)
+		else if (weap == WPN_SHOTGUN)
 			item.netname = "Shotgun";
-		else if (item.items == IT_SUPER_SHOTGUN)
+		else if (weap == WPN_SUPER_SHOTGUN)
 			item.netname = "Double-Barrelled Shotgun";
-		else if (item.items == IT_NAILGUN)
+		else if (weap == WPN_NAILGUN)
 			item.netname = "Nailgun";
-		else if (item.items == IT_SUPER_NAILGUN)
+		else if (weap == WPN_SUPER_NAILGUN)
 			item.netname = "Perforator";
-		else if (item.items == IT_GRENADE_LAUNCHER)
+		else if (weap == WPN_GRENADE_LAUNCHER)
 			item.netname = "Grenade Launcher";
-		else if (item.items == IT_ROCKET_LAUNCHER)
+		else if (weap == WPN_ROCKET_LAUNCHER)
 			item.netname = "Rocket Launcher";
-		else if (item.items == IT_LIGHTNING)
+		else if (weap == WPN_LIGHTNING)
 			item.netname = "Thunderbolt";
 		else
 			item.netname = string_null;

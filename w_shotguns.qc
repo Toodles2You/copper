@@ -175,7 +175,7 @@ void() W_FireSuperShotgun =
 
 	if (self.currentammo == 1)
 	{
-		if (self.items & IT_SHOTGUN)
+		if (W_HasWeapon (self, WPN_SHOTGUN))
 			W_FireShotgun ();
 		return;
 	}

@@ -476,7 +476,7 @@ void Hud_DrawIBarWeapons(vector pos)
 	for (i = 0; i < 7; i++)
 	{
 		if (stat_items & weaponflags[i+1])
-			Hud_DrawWeapon(i+1, pos + '24 0' * i, (currweap == weaponflags[i+1]));
+			Hud_DrawWeapon(i+1, pos + '24 0' * i, currweap == i+2);
 	}
 }
 
@@ -626,7 +626,7 @@ void Hud_DrawModernWeapons(vector pos)
 	{
 		if (stat_items & weaponflags[i])
 		{
-			if (currweap == weaponflags[i])
+			if (currweap == i+1)
 				Hud_DrawWeapon(i, pos + '-24 0', TRUE);
 			else
 				Hud_DrawWeapon(i, pos + '-16 0', FALSE);

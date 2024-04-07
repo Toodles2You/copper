@@ -125,7 +125,7 @@ float(entity inflictor, entity attacker) button_check_attacker =
 		return (self.customflags & CFL_AXEHITME);
 	case 2:
 	case 3:
-		return (attacker.weapon == IT_SHOTGUN || attacker.weapon == IT_SUPER_SHOTGUN);
+		return (attacker.weapon == WPN_SHOTGUN || attacker.weapon == WPN_SUPER_SHOTGUN);
 	case 8:
 		return (self.customflags & CFL_ZAPPED);
 	// projectiles must be checked directly since the player can fire and then switch weapons

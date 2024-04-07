@@ -74,7 +74,7 @@ void() SetNewParms =
 	parm1 = IT_SHOTGUN | IT_AXE;
 	parm2 = 100;
 	parm4 = 25;
-	parm8 = IT_SHOTGUN;
+	parm8 = WPN_SHOTGUN;
 	parm3 = 0;
 	parm5 = 0;
 	parm6 = 0;
@@ -91,10 +91,10 @@ void() SetCoopParms =
 	parm1 = self.items & IT_WEAPONS;
 	parm2 = 100;
 	parm4 = max(25,self.ammo_shells);
-	if (parm1 & IT_SUPER_SHOTGUN)
-		parm8 = IT_SUPER_SHOTGUN;
+	if (W_HasWeapon (self, WPN_SUPER_SHOTGUN))
+		parm8 = WPN_SUPER_SHOTGUN;
 	else
-		parm8 = IT_SHOTGUN;
+		parm8 = WPN_SHOTGUN;
 
 	parm3 = 0;
 	parm5 = self.ammo_nails;
@@ -1570,10 +1570,7 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if(time > self.attack_finished && 
-		!W_HasAmmo(self.weapon) && 
-		self.weapon != IT_AXE
-		)
+	if (time > self.attack_finished && !W_HasAmmo(self.weapon))
 	{
 		W_SelectBestWeapon();
 	}
@@ -1823,14 +1820,14 @@ void(float dmgtype) ClientObituary =
 			attacker.frags = attacker.frags - 1;
 			bprint (self.netname);
 			
-			if (self.weapon == IT_LIGHTNING && self.waterlevel >= WL_WAIST)
+			if (self.weapon == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
 			{
 				bprint (" discharges into the water\n");
 				return;
 			}
-			if (self.weapon == IT_GRENADE_LAUNCHER)
+			else if (self.weapon == WPN_GRENADE_LAUNCHER)
 				bprint (" tries to put the pin back in\n");
-			else if (self.weapon == IT_ROCKET_LAUNCHER)
+			else if (self.weapon == WPN_ROCKET_LAUNCHER)
 			{
 				if (random() < 0.5)
 					bprint (" rocket-jumps into the next world\n");
@@ -1870,7 +1867,7 @@ void(float dmgtype) ClientObituary =
 				attacker.frags = attacker.frags + 1;
 
 			rnum = attacker.weapon;
-			if (rnum == IT_AXE)
+			if (rnum == WPN_AXE)
 			{
 				if (random() < 0.5)
 					deathstring = " was axe-murdered by ";
@@ -1878,27 +1875,27 @@ void(float dmgtype) ClientObituary =
 					deathstring = " got the chop from ";
 				deathstring2 = "\n";
 			}
-			if (rnum == IT_SHOTGUN)
+			else if (rnum == WPN_SHOTGUN)
 			{
 				deathstring = " chewed on ";
 				deathstring2 = "'s boomstick\n";
 			}
-			if (rnum == IT_SUPER_SHOTGUN)
+			else if (rnum == WPN_SUPER_SHOTGUN)
 			{
 				deathstring = " ate 2 loads of ";
 				deathstring2 = "'s buckshot\n";
 			}
-			if (rnum == IT_NAILGUN)
+			else if (rnum == WPN_NAILGUN)
 			{
 				deathstring = " was nailed by ";
 				deathstring2 = "\n";
 			}
-			if (rnum == IT_SUPER_NAILGUN)
+			else if (rnum == WPN_SUPER_NAILGUN)
 			{
 				deathstring = " was punctured by ";
 				deathstring2 = "\n";
 			}
-			if (rnum == IT_GRENADE_LAUNCHER)
+			else if (rnum == WPN_GRENADE_LAUNCHER)
 			{
 				deathstring = " eats ";
 				deathstring2 = "'s pineapple\n";
@@ -1908,7 +1905,7 @@ void(float dmgtype) ClientObituary =
 					deathstring2 = "'s grenade\n";
 				}
 			}
-			if (rnum == IT_ROCKET_LAUNCHER)
+			else if (rnum == WPN_ROCKET_LAUNCHER)
 			{
 				deathstring = " rides ";
 				deathstring2 = "'s rocket\n";
@@ -1918,7 +1915,7 @@ void(float dmgtype) ClientObituary =
 					deathstring2 = "'s rocket\n" ;
 				}
 			}
-			if (rnum == IT_LIGHTNING)
+			else if (rnum == WPN_LIGHTNING)
 			{
 				deathstring = " accepts ";
 				if (attacker.waterlevel >= WL_WAIST)

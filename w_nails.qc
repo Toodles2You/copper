@@ -103,12 +103,12 @@ void() W_FirePerforator =
 
 void() W_FireSpikes =
 {
-	if (self.ammo_nails < 1 || (self.ammo_nails < 2 && !(self.items & IT_NAILGUN)))
+	if (self.ammo_nails < 1 || (self.ammo_nails < 2 && !W_HasWeapon (self, WPN_NAILGUN)))
 	{
 		W_SelectBestWeapon();
 		return;
 	}
-	if (self.ammo_nails >= 2 && self.weapon == IT_SUPER_NAILGUN)
+	if (self.ammo_nails >= 2 && self.weapon == WPN_SUPER_NAILGUN)
 	{
 		W_FirePerforator();
 	}

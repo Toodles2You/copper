@@ -156,6 +156,20 @@ const float	IT_QUAD					= 4194304;
 const float	IT_POWERUPS				= IT_INVISIBILITY + IT_INVULNERABILITY + IT_SUIT + IT_QUAD;
 // more IT flags after this exceeds 1^23, causing FPU bugs and unpredictable behavior
 
+// weapons
+const float	WPN_NONE				= 0;
+const float	WPN_AXE					= 1;
+const float	WPN_SHOTGUN				= 2;
+const float	WPN_SUPER_SHOTGUN		= 3;
+const float	WPN_NAILGUN				= 4;
+const float	WPN_SUPER_NAILGUN		= 5;
+const float	WPN_GRENADE_LAUNCHER	= 6;
+const float	WPN_ROCKET_LAUNCHER		= 7;
+const float	WPN_LIGHTNING			= 8;
+
+const float WPN_FIRST				= WPN_AXE;
+const float WPN_LAST				= WPN_LIGHTNING;
+
 // point content values
 const float	CONTENT_EMPTY		= -1;
 const float	CONTENT_SOLID		= -2;
