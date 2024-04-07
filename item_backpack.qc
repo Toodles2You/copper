@@ -286,6 +286,10 @@ void() DropBackpack =
 			item.netname = "Rocket Launcher";
 		else if (weap == WPN_LIGHTNING)
 			item.netname = "Thunderbolt";
+#ifdef HIPNOTIC
+		else if (weap == WPN_LASER_CANNON)
+			item.netname = "Laser Cannon";
+#endif
 		else
 			item.netname = string_null;
 		

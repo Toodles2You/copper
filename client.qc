@@ -40,6 +40,7 @@ void() SetChangeParms =
 		while (pl.flags & FL_CLIENT)
 		{
 			self.items |= pl.items & IT_WEAPONS;
+			self.items2 |= pl.items2 & IT2_WEAPONS;
 			pl = nextent(pl);
 		}		
 	}
@@ -101,7 +102,7 @@ void() SetCoopParms =
 	parm6 = 0;
 	parm7 = 0;
 	parm9 = 0;
-	parm10 = 0;
+	parm10 = self.items2 & IT2_WEAPONS;
 }
 
 void() DecodeLevelParms =
@@ -1834,6 +1835,10 @@ void(float dmgtype) ClientObituary =
 				else
 					bprint (" is no rocket surgeon\n");
 			}
+			else if (self.weapon == WPN_LASER_CANNON)
+			{
+				bprint (" caught their own laser\n");
+			}
 			else if (self.dmg_inflictor.deathtype != string_null)
 			{
 				bprint(" ");
@@ -1922,6 +1927,14 @@ void(float dmgtype) ClientObituary =
 					deathstring2 = "'s discharge\n";
 				else
 					deathstring2 = "'s shaft\n";
+			}
+			else if (rnum == WPN_LASER_CANNON)
+			{
+				if (random () < 0.5)
+					deathstring = " was toasted by ";
+				else
+					deathstring = " was radiated by ";
+				deathstring2 = "'s laser\n";
 			}
 			bprint (self.netname);
 			bprint (deathstring);

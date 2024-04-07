@@ -328,6 +328,33 @@ void() weapon_axe =
 	StartWeapon();
 }
 
+#ifdef HIPNOTIC
+
+/*QUAKED weapon_laser_gun (0 0 1) (-16 -16 0) (16 16 56) ? ? SUSPENDED
+Laser Cannon.
+
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass base(Weapon) model({ "path": ":progs/g_laserg.mdl" }) = weapon_laser_gun : "Laser Cannon. 
+30 Cells." []
+*/
+void () weapon_laser_gun =
+{
+	if (!SUB_ShouldSpawn ()) return;
+	precache_model_safe ("progs/g_laserg.mdl");
+	setmodel (self, "progs/g_laserg.mdl");
+	self.weapon = WPN_LASER_CANNON;
+	self.ammo_cells = 30;
+	self.netname = "Laser Cannon";
+	StartWeapon ();
+}
+
+#endif /* HIPNOTIC */
 
 // ===============================================================================
 

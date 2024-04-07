@@ -251,6 +251,44 @@ void() player_light2   =[$light2, player_light1  ]
 
 //============================================================================
 
+#ifdef HIPNOTIC
+
+void() player_laser =
+{
+	if (!self.button0)
+	{
+		player_run();
+		return;
+	}
+
+	self.effects |= EF_MUZZLEFLASH;
+
+	if (self.frame != $nailatt1)
+	{
+		self.frame = $nailatt1;
+	}
+	else
+	{
+		self.frame++;
+	}
+
+	self.think = player_laser;
+	self.nextthink = time + 0.125;	// TODO: oh fuck it, it works, you're never touching this again
+
+	if (mod (self.cnt, 2))
+	{
+		self.weaponframe = 1;
+	}
+	else
+	{
+		self.weaponframe = 4;
+	}
+}
+
+#endif /* HIPNOTIC */
+
+//============================================================================
+
 
 void() player_rocket1   =[$rockatt1, player_rocket2  ] {self.weaponframe=1;
 self.effects = self.effects | EF_MUZZLEFLASH;}

@@ -132,9 +132,11 @@ const float	IT_SUPER_SHOTGUN		= 2;
 const float	IT_NAILGUN				= 4;
 const float	IT_SUPER_NAILGUN		= 8;
 const float	IT_GRENADE_LAUNCHER		= 16;
+const float IT_PROXIMITY_GUN		= 65536;
 const float	IT_ROCKET_LAUNCHER		= 32;
 const float	IT_LIGHTNING			= 64;
-const float	IT_WEAPONS				= 127 + 4096;
+const float IT_MJOLNIR				= 128;
+const float	IT_WEAPONS				= 127 + 65536 + 128 + 4096;
 
 const float	IT_SHELLS				= 256;
 const float	IT_NAILS				= 512;
@@ -144,7 +146,6 @@ const float	IT_CELLS				= 2048;
 const float	IT_ARMOR1				= 8192;
 const float	IT_ARMOR2				= 16384;
 const float	IT_ARMOR3				= 32768;
-//float	IT_SUPERHEALTH			= 65536;	// never gets used now, but the .exe expects the following flags
 
 const float	IT_KEY1					= 131072;
 const float	IT_KEY2					= 262144;
@@ -156,6 +157,10 @@ const float	IT_QUAD					= 4194304;
 const float	IT_POWERUPS				= IT_INVISIBILITY + IT_INVULNERABILITY + IT_SUIT + IT_QUAD;
 // more IT flags after this exceeds 1^23, causing FPU bugs and unpredictable behavior
 
+// items2
+const float	IT2_LASER_CANNON		= 1;
+const float	IT2_WEAPONS				= 1;
+
 // weapons
 const float	WPN_NONE				= 0;
 const float	WPN_AXE					= 1;
@@ -166,9 +171,16 @@ const float	WPN_SUPER_NAILGUN		= 5;
 const float	WPN_GRENADE_LAUNCHER	= 6;
 const float	WPN_ROCKET_LAUNCHER		= 7;
 const float	WPN_LIGHTNING			= 8;
+const float	WPN_LASER_CANNON		= 9;
+const float	WPN_MJOLNIR				= 10;
+const float	WPN_PROXIMITY_GUN		= 11;
 
-const float WPN_FIRST				= WPN_AXE;
-const float WPN_LAST				= WPN_LIGHTNING;
+const float	WPN_FIRST				= WPN_NONE + 1;
+#ifdef HIPNOTIC
+const float	WPN_LAST				= WPN_LASER_CANNON;
+#else
+const float	WPN_LAST				= WPN_LIGHTNING;
+#endif
 
 // point content values
 const float	CONTENT_EMPTY		= -1;

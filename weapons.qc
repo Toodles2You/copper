@@ -39,6 +39,12 @@ void() W_Precache =
 	
 	precache_sound ("zombie/z_hit.wav");
 	
+#ifdef HIPNOTIC
+	precache_sound ("enforcer/enfstop.wav");	// laser cannon
+	precache_sound ("hipweap/laserg.wav");		// laser cannon
+	precache_sound ("hipweap/laserric.wav");	// laser cannon ricochet
+
+#endif
 	
 
 	precache_model ("progs/v_axe2.mdl");
@@ -49,6 +55,9 @@ void() W_Precache =
 	precache_model ("progs/v_nail2.mdl");
 	precache_model ("progs/v_rock2.mdl");
 	precache_model ("progs/v_light.mdl");
+#ifdef HIPNOTIC
+	precache_model ("progs/v_laserg.mdl");
+#endif
 
 }
 
@@ -113,6 +122,11 @@ vector(float weap) W_ItemForWeapon =
 		case WPN_LIGHTNING:
 			fl_x = IT_LIGHTNING;
 			break;
+#ifdef HIPNOTIC
+		case WPN_LASER_CANNON:
+			fl_y = IT2_LASER_CANNON;
+			break;
+#endif
 		default:
 			break;
 	}
@@ -159,6 +173,17 @@ float(float item, float item2) W_WeaponForItem =
 		case IT_LIGHTNING:
 			weap = WPN_LIGHTNING;
 			break;
+		default:
+			break;
+	}
+
+	switch (item2)
+	{
+#ifdef HIPNOTIC
+		case IT2_LASER_CANNON:
+			weap = WPN_LASER_CANNON;
+			break;
+#endif
 		default:
 			break;
 	}
@@ -232,6 +257,10 @@ float(float w) W_RankForWeapon =
 		return 1;
 	if (w == WPN_ROCKET_LAUNCHER)
 		return 2;
+#ifdef HIPNOTIC
+	if (w == WPN_LASER_CANNON)
+		return 2.1;
+#endif
 	if (w == WPN_SUPER_NAILGUN)
 		return 3;
 	if (w == WPN_GRENADE_LAUNCHER)
@@ -279,6 +308,9 @@ float(float weap) W_HasAmmo =
 	if (weap == WPN_NAILGUN)		return (self.ammo_nails >= 1);
 	if (weap == WPN_SUPER_NAILGUN)	return (self.ammo_nails >= 2);
 	if (weap == WPN_LIGHTNING)		return (self.ammo_cells >= 1);
+#ifdef HIPNOTIC
+	if (weap == WPN_LASER_CANNON)	return (self.ammo_cells >= 1);
+#endif
 	if (weap == WPN_GRENADE_LAUNCHER || weap == WPN_ROCKET_LAUNCHER)
 		return (self.ammo_rockets >= 1);
 		
@@ -287,6 +319,10 @@ float(float weap) W_HasAmmo =
 
 float() W_BestWeapon =
 {
+#ifdef HIPNOTIC
+	if (W_HasWeapon (self, WPN_LASER_CANNON) && W_HasAmmo (WPN_LASER_CANNON))
+		return WPN_LASER_CANNON;
+#endif
 	if(W_HasWeapon (self, WPN_SUPER_NAILGUN) && W_HasAmmo(WPN_SUPER_NAILGUN))
 		return WPN_SUPER_NAILGUN;
 	if(W_HasWeapon (self, WPN_SUPER_SHOTGUN) && W_HasAmmo (WPN_SUPER_SHOTGUN))
@@ -443,7 +479,11 @@ void() W_SetCurrentAmmo =
 		self.currentammo = self.ammo_rockets;
 		self.items = self.items | IT_ROCKETS;
 	}
-	else if (self.weapon == WPN_LIGHTNING)
+	else if (self.weapon == WPN_LIGHTNING
+#ifdef HIPNOTIC
+		|| self.weapon == WPN_LASER_CANNON
+#endif
+		)
 	{
 		self.currentammo = self.ammo_cells;
 		self.items = self.items | IT_CELLS;
@@ -478,6 +518,10 @@ void() W_ResetWeaponState =
 		self.weaponmodel = "progs/v_rock2.mdl";
 	else if (self.weapon == WPN_LIGHTNING)
 		self.weaponmodel = "progs/v_light.mdl";
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_LASER_CANNON)
+		self.weaponmodel = "progs/v_laserg.mdl";
+#endif
 	else
 		self.weaponmodel = string_null;
 
@@ -578,6 +622,13 @@ void() W_Attack =
 		self.attack_finished = time + 0.1;
 		sound (self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_LASER_CANNON)
+	{
+		player_laser ();
+		W_FireLaser ();
+	}
+#endif
 }
 
 /*
