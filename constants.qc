@@ -177,9 +177,16 @@ const float	WPN_PROXIMITY_GUN		= 11;
 
 const float	WPN_FIRST				= WPN_NONE + 1;
 #ifdef HIPNOTIC
-const float	WPN_LAST				= WPN_LASER_CANNON;
+const float	WPN_COUNT				= WPN_LASER_CANNON;
 #else
-const float	WPN_LAST				= WPN_LIGHTNING;
+const float	WPN_COUNT				= WPN_LIGHTNING;
+#endif
+
+const float	WPN_CYCLE_START			= WPN_FIRST;
+#ifdef HIPNOTIC
+const float	WPN_CYCLE_END			= WPN_COUNT;
+#else
+const float	WPN_CYCLE_END			= WPN_COUNT;
 #endif
 
 // point content values

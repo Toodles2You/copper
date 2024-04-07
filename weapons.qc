@@ -415,13 +415,13 @@ for players who insist on shuffling through their inventory the slow way
 */
 float W_Next(float w) =
 {
-	if (w == WPN_LAST) return WPN_FIRST;
+	if (w == WPN_CYCLE_END) return WPN_CYCLE_START;
 	return w + 1;
 }
 
 float W_Prev(float w) =
 {
-	if (w == WPN_FIRST) return WPN_LAST;
+	if (w == WPN_CYCLE_START) return WPN_CYCLE_END;
 	return w - 1;
 }
 

@@ -35,7 +35,7 @@ void() Cheat_Items =
 	
 	float i;
 
-	for (i = WPN_FIRST; i <= WPN_LAST; i++)
+	for (i = WPN_FIRST; i <= WPN_COUNT; i++)
 	{
 		W_SetHasWeapon (self, i, TRUE);
 	}
