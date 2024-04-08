@@ -21,7 +21,7 @@ const string weaponlabel[8] = {	"axe","shotgun","sshotgun","nailgun","snailgun",
 
 float stat_items, stat_items2, stat_health, keytype;
 float paintime, lookseed;
-float itemtimes[30];
+float itemtimes[32];
 float baralpha;
 float hudstyle;
 float coopdata;
@@ -370,27 +370,27 @@ void(float wnum, vector pos, float sel) Hud_DrawWeapon
 void Hud_DrawSigils(vector pos)
 {
 	float pulse;
-	if (stat_items2 & 32)
+	if (stat_items2 & IT2_SIGIL1)
 	{
-		if (time < itemtimes[23] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[23]) % 0.5);
+		if (time < itemtimes[28] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[28]) % 0.5);
 		else pulse = 1;
 		drawpic(pos, "sb_sigil1", '8 16', '1 1 1', pulse, 0);
 	}
-	if (stat_items2 & 64)
+	if (stat_items2 & IT2_SIGIL2)
 	{
-		if (time < itemtimes[24] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[24]) % 0.5);
+		if (time < itemtimes[29] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[29]) % 0.5);
 		else pulse = 1;
 		drawpic(pos + '9 0', "sb_sigil2", '8 16', '1 1 1', pulse, 0);
 	}
-	if (stat_items2 & 128)
+	if (stat_items2 & IT2_SIGIL3)
 	{
-		if (time < itemtimes[25] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[25]) % 0.5);
+		if (time < itemtimes[30] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[30]) % 0.5);
 		else pulse = 1;
 		drawpic(pos + '16 0', "sb_sigil3", '8 16', '1 1 1', pulse, 0);
 	}
-	if (stat_items2 & 256)
+	if (stat_items2 & IT2_SIGIL4)
 	{
-		if (time < itemtimes[26] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[26]) % 0.5);
+		if (time < itemtimes[31] + 1.5) pulse = 1.2 - 2 * ((time - itemtimes[31]) % 0.5);
 		else pulse = 1;
 		drawpic(pos + '24 0', "sb_sigil4", '8 16', '1 1 1', pulse, 0);
 	}
@@ -637,11 +637,11 @@ void Hud_DrawModernWeapons(vector pos)
 
 void Hud_DrawModernCenter(vector pos, float expanded)
 {
-	if ((world.model == "maps/start.bsp" && (stat_items2 & 480)) ||
-		(itemtimes[23] && time < itemtimes[23] + 3) ||
-		(itemtimes[24] && time < itemtimes[24] + 3) ||
-		(itemtimes[25] && time < itemtimes[25] + 3) ||
-		(itemtimes[26] && time < itemtimes[26] + 3) )
+	if ((world.model == "maps/start.bsp" && (stat_items2 & IT2_SIGILS)) ||
+		(itemtimes[28] && time < itemtimes[28] + 3) ||
+		(itemtimes[29] && time < itemtimes[29] + 3) ||
+		(itemtimes[30] && time < itemtimes[30] + 3) ||
+		(itemtimes[31] && time < itemtimes[31] + 3) )
 	{
 		drawsubpic(pos + '-16 -32', '32 16', "ibar", '0.9 0.3333333333', '0.1 0.6666666667', '1 1 1', 1);
 		Hud_DrawSigils(pos + '-16 -32');
@@ -701,8 +701,8 @@ void() HUD_UpdateStats =
 		}
 		f *= 2;
 	}
-	f = 32;
-	for (i = 0; i < 4; i++)
+	f = 1;
+	for (i = 0; i < 9; i++)
 	{
 		if ((stat_items2 & f) != (olditems2 & f))
 		{

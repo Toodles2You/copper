@@ -162,6 +162,12 @@ const float	IT2_SHIFT				= 8388608;
 const float	IT2_LASER_CANNON		= 1;
 const float	IT2_WEAPONS				= 1;
 
+const float	IT2_SIGIL1				= 32;
+const float	IT2_SIGIL2				= 64;
+const float	IT2_SIGIL3				= 128;
+const float	IT2_SIGIL4				= 256;
+const float	IT2_SIGILS				= IT2_SIGIL1 + IT2_SIGIL2 + IT2_SIGIL3 + IT2_SIGIL4;
+
 // weapons
 const float	WPN_NONE				= 0;
 const float	WPN_AXE					= 1;

@@ -591,11 +591,11 @@ void(entity client) SetClientRunes =
 	{
 		if (serverflags & i)
 		{
-			client.items2 |= i * 32;
+			client.items2 |= i * IT2_SIGIL1;
 		}
 		else
 		{
-			client.items2 = not (client.items2, i * 32);
+			client.items2 = not (client.items2, i * IT2_SIGIL1);
 		}
 	}
 }
