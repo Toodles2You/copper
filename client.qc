@@ -1845,7 +1845,15 @@ void(float dmgtype) ClientObituary =
 			attacker.frags = attacker.frags - 1;
 			bprint (self.netname);
 			
-			if (self.weaponindex == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
+			if (self.dmg_inflictor.classname == "proximity_grenade")
+			{
+				bprint (" was a bad demoman\n");
+			}
+			else if (self.dmg_inflictor.classname == "hiplaser")
+			{
+				bprint (" caught their own laser\n");
+			}
+			else if (self.weaponindex == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
 			{
 				bprint (" discharges into the water\n");
 				return;
@@ -1858,10 +1866,6 @@ void(float dmgtype) ClientObituary =
 					bprint (" rocket-jumps into the next world\n");
 				else
 					bprint (" is no rocket surgeon\n");
-			}
-			else if (self.weaponindex == WPN_LASER_CANNON)
-			{
-				bprint (" caught their own laser\n");
 			}
 			else if (self.dmg_inflictor.deathtype != string_null)
 			{
@@ -1894,6 +1898,16 @@ void(float dmgtype) ClientObituary =
 		{
 			if (deathmatch)
 				attacker.frags = attacker.frags + 1;
+
+			if (self.dmg_inflictor.classname == "proximity_grenade")
+			{
+				if (random () < 0.5)
+					deathstring = " got too friendly with ";
+				else
+					deathstring = " did the rhumba with ";
+				deathstring2 = "'s bomb\n";
+				return;
+			}
 
 			rnum = attacker.weaponindex;
 			if (rnum == WPN_AXE)
@@ -1959,6 +1973,11 @@ void(float dmgtype) ClientObituary =
 				else
 					deathstring = " was radiated by ";
 				deathstring2 = "'s laser\n";
+			}
+			else if (rnum == WPN_MJOLNIR)
+			{
+				deathstring = " was slammed by ";
+				deathstring2 = "'s hammer\n";
 			}
 			bprint (self.netname);
 			bprint (deathstring);
