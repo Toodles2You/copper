@@ -1845,6 +1845,7 @@ void(float dmgtype) ClientObituary =
 			attacker.frags = attacker.frags - 1;
 			bprint (self.netname);
 			
+#ifdef HIPNOTIC
 			if (self.dmg_inflictor.classname == "proximity_grenade")
 			{
 				bprint (" is a bad demoman\n");
@@ -1853,7 +1854,9 @@ void(float dmgtype) ClientObituary =
 			{
 				bprint (" caught their own laser\n");
 			}
-			else if (self.weaponindex == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
+			else 
+#endif
+			if (self.weaponindex == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
 			{
 				bprint (" discharges into the water\n");
 				return;
@@ -1867,10 +1870,12 @@ void(float dmgtype) ClientObituary =
 				else
 					bprint (" is no rocket surgeon\n");
 			}
+#ifdef HIPNOTIC
 			else if (self.weaponindex == WPN_MJOLNIR && self.waterlevel >= WL_WAIST)
 			{
 				bprint (" ascends to Valhalla\n");
 			}
+#endif
 			else if (self.dmg_inflictor.deathtype != string_null)
 			{
 				bprint(" ");
@@ -1903,6 +1908,7 @@ void(float dmgtype) ClientObituary =
 			if (deathmatch)
 				attacker.frags = attacker.frags + 1;
 
+#ifdef HIPNOTIC
 			if (self.dmg_inflictor.classname == "proximity_grenade")
 			{
 				if (random () < 0.5)
@@ -1912,6 +1918,7 @@ void(float dmgtype) ClientObituary =
 				deathstring2 = "'s bomb\n";
 				return;
 			}
+#endif
 
 			rnum = attacker.weaponindex;
 			if (rnum == WPN_AXE)
@@ -1970,6 +1977,7 @@ void(float dmgtype) ClientObituary =
 				else
 					deathstring2 = "'s shaft\n";
 			}
+#ifdef HIPNOTIC
 			else if (rnum == WPN_LASER_CANNON)
 			{
 				if (random () < 0.5)
@@ -1983,6 +1991,7 @@ void(float dmgtype) ClientObituary =
 				deathstring = " was slammed by ";
 				deathstring2 = "'s hammer\n";
 			}
+#endif
 			bprint (self.netname);
 			bprint (deathstring);
 			bprint (attacker.netname);

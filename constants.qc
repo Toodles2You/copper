@@ -133,11 +133,17 @@ const float	IT_SUPER_SHOTGUN		= 2;
 const float	IT_NAILGUN				= 4;
 const float	IT_SUPER_NAILGUN		= 8;
 const float	IT_GRENADE_LAUNCHER		= 16;
+#ifdef HIPNOTIC
 const float IT_PROXIMITY_GUN		= 65536;
+#endif
 const float	IT_ROCKET_LAUNCHER		= 32;
 const float	IT_LIGHTNING			= 64;
+#ifdef HIPNOTIC
 const float IT_MJOLNIR				= 128;
 const float	IT_WEAPONS				= 127 + 65536 + 128 + 4096;
+#else
+const float	IT_WEAPONS				= 127 + 4096;
+#endif
 
 const float	IT_SHELLS				= 256;
 const float	IT_NAILS				= 512;
@@ -160,8 +166,12 @@ const float	IT_POWERUPS				= IT_INVISIBILITY + IT_INVULNERABILITY + IT_SUIT + IT
 
 // items2
 const float	IT2_SHIFT				= 8388608;
+#ifdef HIPNOTIC
 const float	IT2_LASER_CANNON		= 1;
 const float	IT2_WEAPONS				= 1;
+#else
+const float	IT2_WEAPONS				= 0;
+#endif
 
 const float	IT2_SIGIL1				= 32;
 const float	IT2_SIGIL2				= 64;
@@ -179,9 +189,11 @@ const float	WPN_SUPER_NAILGUN		= 5;
 const float	WPN_GRENADE_LAUNCHER	= 6;
 const float	WPN_ROCKET_LAUNCHER		= 7;
 const float	WPN_LIGHTNING			= 8;
+#ifdef HIPNOTIC
 const float	WPN_LASER_CANNON		= 9;
 const float	WPN_MJOLNIR				= 10;
 const float	WPN_PROXIMITY_GUN		= 11;
+#endif
 
 const float	WPN_FIRST				= WPN_NONE + 1;
 #ifdef HIPNOTIC

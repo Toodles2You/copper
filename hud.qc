@@ -542,12 +542,14 @@ void Hud_DrawIBarWeapons(vector pos)
 	pos_y += 8;
 	for (i = 0; i < 7; i++)
 	{
+#ifdef HIPNOTIC
 		// grenade launcher and/or proximity gun
 		if (i == 4)
 		{
 			Hud_DrawAltWeapon (weaponflags[5], hipweaponflags[2], 5, 10, 11, 12, pos + '24 0' * i);
 			continue;
 		}
+#endif
 
 		if (stat_items & weaponflags[i+1])
 			Hud_DrawWeapon(i+1, pos + '24 0' * i, currweap == weaponflags[i+1]);
@@ -746,6 +748,7 @@ void Hud_DrawModernWeapons(vector pos)
 	for (i = 7; i >= 0; i--)
 	{
 		// grenade launcher and/or proximity gun
+#ifdef HIPNOTIC
 		if (i == 5)
 		{
 			if (stat_items & weaponflags[5] || stat_items & hipweaponflags[2])
@@ -758,6 +761,7 @@ void Hud_DrawModernWeapons(vector pos)
 			pos += '0 16';
 			continue;
 		}
+#endif
 
 		if (stat_items & weaponflags[i])
 		{
