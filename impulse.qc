@@ -170,18 +170,26 @@ void() ImpulseCommands =
 	
 	if (self.impulse >= WPN_AXE && self.impulse <= WPN_LIGHTNING)
 	{
-		W_ChangeWeapon ();
+#ifdef HIPNOTIC
+		if (self.impulse == WPN_GRENADE_LAUNCHER && self.weapon == WPN_GRENADE_LAUNCHER)
+		{
+			if (W_HasWeapon (self, WPN_PROXIMITY_GUN))
+			{
+				self.impulse = WPN_PROXIMITY_GUN;
+			}
+		}
+#endif
+
+		W_ChangeWeapon (self.impulse);
 	}
 #ifdef HIPNOTIC
 	else if (self.impulse >= 225 && self.impulse <= 227)
 	{
-		self.impulse = WPN_LIGHTNING + (self.impulse - 224);
-		W_ChangeWeapon ();
+		W_ChangeWeapon (WPN_LIGHTNING + (self.impulse - 224));
 	}
 	else if (self.impulse == 228)
 	{
-		self.impulse = WPN_GRENADE_LAUNCHER;
-		W_ChangeWeapon ();
+		W_ChangeWeapon (WPN_GRENADE_LAUNCHER);
 	}
 #endif
 	else if (self.impulse >= 20 && self.impulse <= 39)

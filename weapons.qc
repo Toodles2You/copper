@@ -399,24 +399,10 @@ void() W_SelectBestNailgun =
 W_ChangeWeapon
 ============
 */
-void() W_ChangeWeapon =
-{
-	float weap;
-	
+void(float weap) W_ChangeWeapon =
+{	
 	if (self.customflags & CFL_PLUNGE)
 		return;
-
-	weap = self.impulse;
-
-#ifdef HIPNOTIC
-	if (weap == WPN_GRENADE_LAUNCHER && W_HasWeapon (self, WPN_PROXIMITY_GUN))
-	{
-		if (self.weapon == WPN_GRENADE_LAUNCHER)
-		{
-			weap = WPN_PROXIMITY_GUN;
-		}
-	}
-#endif
 
 	if (!W_HasWeapon (self, weap))
 	{	// don't have the weapon or the ammo
