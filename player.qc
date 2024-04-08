@@ -272,14 +272,14 @@ void() player_light2   =[$light2, player_light1  ]
 void()   player_hammer1 =  [32, player_hammer2   ] {self.weaponframe=1;};
 void()   player_hammer2 =  [33, player_hammer3   ] {self.weaponframe=2;};
 void()   player_hammer3 =  [34, player_hammer4   ] {self.weaponframe=3;};
-void()   player_hammer4 =  [35, player_hammer5   ] {self.weaponframe=4;W_FireMjolnir();};
+void()   player_hammer4 =  [35, player_hammer5   ] {self.weaponframe=4; W_FireMjolnir (FALSE);};
 void()   player_hammer5 =  [36, player_hammer6   ] {self.weaponframe=4;};
 void()   player_hammer6 =  [37, player_run ] {self.weaponframe=4;};
 
 void()   player_mjolnir1 =  [38, player_mjolnir2   ] {self.weaponframe=1;};
 void()   player_mjolnir2 =  [39, player_mjolnir3   ] {self.weaponframe=2;};
 void()   player_mjolnir3 =  [40, player_mjolnir4   ] {self.weaponframe=3;};
-void()   player_mjolnir4 =  [41, player_mjolnir5   ] {self.weaponframe=4;W_FireMjolnir();};
+void()   player_mjolnir4 =  [41, player_mjolnir5   ] {self.weaponframe=4; W_FireMjolnir (TRUE);};
 void()   player_mjolnir5 =  [42, player_mjolnir6   ] {self.weaponframe=4;};
 void()   player_mjolnir6 =  [43, player_run ] {self.weaponframe=4;};
 

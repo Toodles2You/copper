@@ -648,7 +648,10 @@ void() W_Attack =
 #ifdef HIPNOTIC
 	else if (self.weaponindex == WPN_MJOLNIR)
 	{
-		// this didn't match up with the ammo needed to perform the lightning attack for some reason
+		// toodles: when the hit connects, the mjolnir swing will always end up
+		// doing the lightning attack regardless of cells, and the hammer swing
+		// will check for the lightning attack if the player has enough cells.
+		// a bit of insurance for a very unwieldy weapon.
 		if (self.ammo_cells < 15)
 			player_hammer1 ();
 		else

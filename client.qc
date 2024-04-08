@@ -1867,6 +1867,10 @@ void(float dmgtype) ClientObituary =
 				else
 					bprint (" is no rocket surgeon\n");
 			}
+			else if (self.weaponindex == WPN_MJOLNIR && self.waterlevel >= WL_WAIST)
+			{
+				bprint (" ascends to Valhalla\n");
+			}
 			else if (self.dmg_inflictor.deathtype != string_null)
 			{
 				bprint(" ");
