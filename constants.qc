@@ -184,7 +184,7 @@ const float	WPN_COUNT				= WPN_LIGHTNING;
 
 const float	WPN_CYCLE_START			= WPN_FIRST;
 #ifdef HIPNOTIC
-const float	WPN_CYCLE_END			= WPN_COUNT;
+const float	WPN_CYCLE_END			= WPN_MJOLNIR;
 #else
 const float	WPN_CYCLE_END			= WPN_COUNT;
 #endif

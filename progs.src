@@ -27,6 +27,7 @@ weapons.qc
 w_axe.qc
 w_lasers.qc
 w_lightning.qc
+w_mjolnir.qc
 w_shotguns.qc
 w_proximity.qc
 w_rockets.qc

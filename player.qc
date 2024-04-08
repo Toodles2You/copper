@@ -67,6 +67,14 @@ void()	player_stand1 =[	$axstnd1,	player_stand1	]
 			self.walkframe = 0;
 		self.frame = $axstnd1 + self.walkframe;
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+	{
+		if (self.walkframe >= 12)
+			self.walkframe = 0;
+	   self.frame = 6 + self.walkframe;
+	}
+#endif
 	else
 	{
 		if (self.walkframe >= 5)
@@ -92,6 +100,14 @@ void()	player_run =[	$rockrun1,	player_run	]
 			self.walkframe = 0;
 		self.frame = $axrun1 + self.walkframe;
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+	{
+		if (self.walkframe >= 6)
+			self.walkframe = 0;
+		self.frame = self.walkframe;
+	}
+#endif
 	else
 	{
 		if (self.walkframe >= 6)
@@ -253,6 +269,22 @@ void() player_light2   =[$light2, player_light1  ]
 
 #ifdef HIPNOTIC
 
+void()   player_hammer1 =  [32, player_hammer2   ] {self.weaponframe=1;};
+void()   player_hammer2 =  [33, player_hammer3   ] {self.weaponframe=2;};
+void()   player_hammer3 =  [34, player_hammer4   ] {self.weaponframe=3;};
+void()   player_hammer4 =  [35, player_hammer5   ] {self.weaponframe=4;W_FireMjolnir();};
+void()   player_hammer5 =  [36, player_hammer6   ] {self.weaponframe=4;};
+void()   player_hammer6 =  [37, player_run ] {self.weaponframe=4;};
+
+void()   player_mjolnir1 =  [38, player_mjolnir2   ] {self.weaponframe=1;};
+void()   player_mjolnir2 =  [39, player_mjolnir3   ] {self.weaponframe=2;};
+void()   player_mjolnir3 =  [40, player_mjolnir4   ] {self.weaponframe=3;};
+void()   player_mjolnir4 =  [41, player_mjolnir5   ] {self.weaponframe=4;W_FireMjolnir();};
+void()   player_mjolnir5 =  [42, player_mjolnir6   ] {self.weaponframe=4;};
+void()   player_mjolnir6 =  [43, player_run ] {self.weaponframe=4;};
+
+//============================================================================
+
 void() player_laser =
 {
 	if (!self.button0)
@@ -384,6 +416,17 @@ void()	player_axpain4 =	[	$axpain4,	player_axpain5	] {}
 void()	player_axpain5 =	[	$axpain5,	player_axpain6	] {}
 void()	player_axpain6 =	[	$axpain6,	player_run	] {}
 
+#ifdef HIPNOTIC
+
+void()	player_hampain1 =	[	18,	player_hampain2	] {PainSound();self.weaponframe=0;};
+void()	player_hampain2 =	[	19,	player_hampain3	] {};
+void()	player_hampain3 =	[	20,	player_hampain4	] {};
+void()	player_hampain4 =	[	21,	player_hampain5	] {};
+void()	player_hampain5 =	[	22,	player_hampain6	] {};
+void()	player_hampain6 =	[	23,	player_run	] {};
+
+#endif /* HIPNOTIC */
+
 void(entity attacker, float damage) player_pain =
 {
 	if (self.weaponframe)
@@ -394,6 +437,10 @@ void(entity attacker, float damage) player_pain =
 
 	if (self.weapon == WPN_AXE )
 		player_axpain1 ();
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+		player_hampain1 ();
+#endif
 	else
 		player_pain1 ();
 }
@@ -553,6 +600,14 @@ void() PlayerDie =
 		player_die_ax1 ();
 		return;
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+	{
+		self.modelindex = modelindex_hammer;
+		player_die_ham1 ();
+		return;
+	}
+#endif
 	
 	i = 1 + floor(random()*6);
 	
@@ -648,3 +703,16 @@ void()	player_die_ax6	=	[	$axdeth6,	player_die_ax7	] {}
 void()	player_die_ax7	=	[	$axdeth7,	player_die_ax8	] {}
 void()	player_die_ax8	=	[	$axdeth8,	player_die_ax9	] {}
 void()	player_die_ax9	=	[	$axdeth9,	player_die_ax9	] {PlayerDead();}
+
+#ifdef HIPNOTIC
+
+void()	player_die_ham1	=	[	24,	player_die_ham2	] {};
+void()	player_die_ham2	=	[	25,	player_die_ham3	] {};
+void()	player_die_ham3	=	[	26,	player_die_ham4	] {};
+void()	player_die_ham4	=	[	27,	player_die_ham5	] {};
+void()	player_die_ham5	=	[	28,	player_die_ham6	] {};
+void()	player_die_ham6	=	[	29,	player_die_ham7	] {};
+void()	player_die_ham7	=	[	30,	player_die_ham8	] {};
+void()	player_die_ham8	=	[	31,	player_die_ham8	] {PlayerDead();};
+
+#endif /* HIPNOTIC */

@@ -263,6 +263,9 @@ entity	lastspawn, bodyqueue_head;
 // moved from client.qc
 float	intermission, intermission_exittime;
 float	modelindex_eyes, modelindex_player;
+#ifdef HIPNOTIC
+float	modelindex_hammer;
+#endif
 
 float	icantsee;
 // these are set in worldspawn() and thus reset every game start

@@ -698,6 +698,11 @@ void() PutClientInServer =
 	setmodel (self, "progs/player.mdl");
 	modelindex_player = self.modelindex;
 
+#ifdef HIPNOTIC
+	setmodel (self, "progs/playham.mdl");
+	modelindex_hammer = self.modelindex;
+#endif
+
 	setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 	
 	self.view_ofs = '0 0 22';
@@ -1382,8 +1387,16 @@ void() CheckPowerups =
 		self.frame = 0;
 		self.modelindex = modelindex_eyes;
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+	{
+		self.modelindex = modelindex_hammer;
+	}
+#endif
 	else
+	{
 		self.modelindex = modelindex_player;	// don't use eyes
+	}
 
 // invincibility
 	if (self.invincible_finished)

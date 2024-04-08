@@ -47,6 +47,10 @@ void() W_Precache =
 	precache_sound ("hipweap/proxwarn.wav");	// proximity bomb
 	precache_sound ("hipweap/proxbomb.wav");	// proximity bomb
 
+	precache_sound ("knight/sword1.wav");		// mjolnir
+	precache_sound ("hipweap/mjolhit.wav");		// mjolnir
+	precache_sound ("hipweap/mjolslap.wav");	// mjolnir
+	precache_sound ("hipweap/mjoltink.wav");	// mjolnir
 #endif
 	
 
@@ -60,6 +64,7 @@ void() W_Precache =
 	precache_model ("progs/v_light.mdl");
 #ifdef HIPNOTIC
 	precache_model ("progs/v_laserg.mdl");
+	precache_model ("progs/v_hammer.mdl");
 	precache_model ("progs/v_prox.mdl");
 #endif
 
@@ -130,6 +135,9 @@ vector(float weap) W_ItemForWeapon =
 		case WPN_LASER_CANNON:
 			fl_y = IT2_LASER_CANNON;
 			break;
+		case WPN_MJOLNIR:
+			fl_x = IT_MJOLNIR;
+			break;
 		case WPN_PROXIMITY_GUN:
 			fl_x = IT_PROXIMITY_GUN;
 			break;
@@ -181,6 +189,9 @@ float(float item, float item2) W_WeaponForItem =
 			weap = WPN_LIGHTNING;
 			break;
 #ifdef HIPNOTIC
+		case IT_MJOLNIR:
+			weap = WPN_MJOLNIR;
+			break;
 		case IT_PROXIMITY_GUN:
 			weap = WPN_PROXIMITY_GUN;
 			break;
@@ -261,6 +272,7 @@ float(entity who, float weap, float canihas) W_SetHasWeapon =
 	return TRUE;
 }
 
+// this function is poop so i will treat it as such
 float(float w) W_RankForWeapon =
 {
 	if (!w)
@@ -285,6 +297,10 @@ float(float w) W_RankForWeapon =
 		return 5;
 	if (w == WPN_NAILGUN)
 		return 6;
+#ifdef HIPNOTIC
+	if (w == WPN_MJOLNIR)
+		return 6.1;
+#endif
 	return 7;
 }
 
@@ -318,6 +334,9 @@ void(entity e, float new) W_BetterWeapon =
 float(float weap) W_HasAmmo =
 {
 	if (weap == WPN_NONE || weap == WPN_AXE) return TRUE;
+#ifdef HIPNOTIC
+	if (weap == WPN_MJOLNIR) return TRUE;
+#endif
 	
 	if (weap == WPN_SUPER_SHOTGUN)	return (self.ammo_shells >= 2);
 	if (weap == WPN_SHOTGUN)		return (self.ammo_shells >= 1);
@@ -351,6 +370,10 @@ float() W_BestWeapon =
 		return WPN_NAILGUN;
 	if(W_HasWeapon (self, WPN_SHOTGUN) && W_HasAmmo(WPN_SHOTGUN))
 		return WPN_SHOTGUN;
+#ifdef HIPNOTIC
+	if (W_HasWeapon (self, WPN_MJOLNIR))
+		return WPN_MJOLNIR;
+#endif
 	if (W_HasWeapon (self, WPN_AXE))
 		return WPN_AXE;
 		
@@ -507,6 +530,7 @@ void() W_SetCurrentAmmo =
 	else if (self.weapon == WPN_LIGHTNING
 #ifdef HIPNOTIC
 		|| self.weapon == WPN_LASER_CANNON
+		|| self.weapon == WPN_MJOLNIR
 #endif
 		)
 	{
@@ -546,6 +570,8 @@ void() W_ResetWeaponState =
 #ifdef HIPNOTIC
 	else if (self.weapon == WPN_LASER_CANNON)
 		self.weaponmodel = "progs/v_laserg.mdl";
+	else if (self.weapon == WPN_MJOLNIR)
+		self.weaponmodel = "progs/v_hammer.mdl";
 	else if (self.weapon == WPN_PROXIMITY_GUN)
 		self.weaponmodel = "progs/v_prox.mdl";
 #endif
@@ -614,6 +640,18 @@ void() W_Attack =
 		W_AxeSwing();
 		return;
 	}
+#ifdef HIPNOTIC
+	else if (self.weapon == WPN_MJOLNIR)
+	{
+		// this didn't match up with the ammo needed to perform the lightning attack for some reason
+		if (self.ammo_cells < 15)
+			player_hammer1 ();
+		else
+			player_mjolnir1 ();
+		W_MjolnirSwing ();
+		return;
+	}
+#endif
 	
 	// moved after axe so that silent swings don't wake monsters
 	self.show_hostile = time + 1;

@@ -330,6 +330,30 @@ void() weapon_axe =
 
 #ifdef HIPNOTIC
 
+/*QUAKED weapon_mjolnir (0 0 1) (-16 -16 0) (16 16 56) ? ? SUSPENDED
+Mjolnir.
+
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass base(Weapon) model({ "path": ":progs/g_hammer.mdl" }) = weapon_mjolnir : "Mjolnir. 
+30 Cells." []
+*/
+void () weapon_mjolnir =
+{
+	if (!SUB_ShouldSpawn ()) return;
+	precache_model_safe ("progs/g_hammer.mdl");
+	setmodel (self, "progs/g_hammer.mdl");
+	self.weapon = WPN_MJOLNIR;
+	self.ammo_cells = 30;
+	self.netname = "Mjolnir";
+	StartWeapon ();
+}
+
 /*QUAKED weapon_laser_gun (0 0 1) (-16 -16 0) (16 16 56) ? ? SUSPENDED
 Laser Cannon.
 
