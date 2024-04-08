@@ -36,8 +36,10 @@ void(entity who, float amt) TintScreen
 //	bprint(ftos(amt)); bprint("\n");
 	if (noTint)
 	{
+#ifndef NO_CSQC
 		who.tint = amt;
 		who.tint_color = '0 0 0';
+#endif
 	}
 	else
 	{
@@ -64,8 +66,10 @@ void(entity who, float amt, vector color) TintScreenColor
 	
 	if (noTint)
 	{
+#ifndef NO_CSQC
 		who.tint = amt;
 		who.tint_color = color;
+#endif
 	}
 	else
 	{
