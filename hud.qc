@@ -17,25 +17,27 @@ const float weaponflags[8] = {
 
 #ifdef HIPNOTIC
 
-const float hipweaponflags[2] =
+const float hipweaponflags[3] =
 {
 	// the laser cannon STAT_ACTIVEWEAPON will be the unshifted item flag
 	IT2_LASER_CANNON * IT2_SHIFT,
-	IT_MJOLNIR
+	IT_MJOLNIR,
+	IT_PROXIMITY_GUN,
 };
 
-const float hipweaponflags2[2] =
+const float hipweaponflags2[3] =
 {
 	IT2_LASER_CANNON,
-	0
+	0,
+	0,
 };
 
 #endif
 
-const float weaponbits[10] = { 12, 0, 1, 2, 3, 4, 5, 6, 23, 7 };
+const float weaponbits[13] = { 12, 0, 1, 2, 3, 4, 5, 6, 23, 7, 16, 16, 4 };
 
 const string weaponflash[6] = { "gfx/inv_","gfx/inv2_","gfx/inva2_","gfx/inva3_","gfx/inva4_","gfx/inva1_" };	// use selected glow as a better last frame
-const string weaponlabel[10] = {	"axe","shotgun","sshotgun","nailgun","snailgun","rlaunch","srlaunch","lightng","laser","mjolnir" };
+const string weaponlabel[13] = {	"axe","shotgun","sshotgun","nailgun","snailgun","rlaunch","srlaunch","lightng","laser","mjolnir","prox","prox_gren","gren_prox" };
 
 float stat_items, stat_items2, stat_health, keytype;
 float paintime, lookseed;
@@ -487,6 +489,52 @@ void Hud_DrawMultiplayer(vector pos, vector offset, float width)
 	}
 }
 
+void Hud_DrawAltWeapon (float weapflag, float altflag, float weap, float alt, float altweap, float weapalt, vector pos)
+{
+	float currweap = getstatf(STAT_ACTIVEWEAPON);
+	float flashtime;
+
+	// player has the alternate
+	if (stat_items & altflag)
+	{
+		// player has both
+		if (stat_items & weapflag)
+		{
+			// player is using the primary
+			if (currweap == weapflag)
+			{
+				// primary (or alternate)
+				Hud_DrawWeapon (weapalt, pos, currweap == weapflag);
+				return;
+			}
+			else
+			{
+				// player just picked up the primary after already having the alternate
+				flashtime = HUD_FlashTime (weaponbits[weapalt]);
+				if (flashtime != 0 && itemtimes[weaponbits[weapalt]] > itemtimes[weaponbits[altweap]])
+				{
+					// primary (or alternate)
+					Hud_DrawWeapon (weapalt, pos, currweap == weapflag);
+					return;
+				}
+			}
+			// alternate (or primary)
+			Hud_DrawWeapon (altweap, pos, currweap == altflag);
+			return;
+		}
+
+		// alternate only
+		Hud_DrawWeapon (alt, pos, currweap == altflag);
+		return;
+	}
+
+	// player has only the primary
+	if (stat_items & weapflag)
+	{
+		Hud_DrawWeapon (weap, pos, currweap == weapflag);
+	}
+}
+
 void Hud_DrawIBarWeapons(vector pos)
 {
 	float currweap = getstatf(STAT_ACTIVEWEAPON);
@@ -494,6 +542,13 @@ void Hud_DrawIBarWeapons(vector pos)
 	pos_y += 8;
 	for (i = 0; i < 7; i++)
 	{
+		// grenade launcher and/or proximity gun
+		if (i == 4)
+		{
+			Hud_DrawAltWeapon (weaponflags[5], hipweaponflags[2], 5, 10, 11, 12, pos + '24 0' * i);
+			continue;
+		}
+
 		if (stat_items & weaponflags[i+1])
 			Hud_DrawWeapon(i+1, pos + '24 0' * i, currweap == weaponflags[i+1]);
 	}
@@ -1006,6 +1061,10 @@ void() Hud_Init
 #ifdef HIPNOTIC
 		precache_pic(strcat(weaponflash[i], "laser"), TRUE);
 		precache_pic(strcat(weaponflash[i], "mjolnir"), TRUE);
+		
+		precache_pic(strcat(weaponflash[i], "prox"), TRUE);
+		precache_pic(strcat(weaponflash[i], "gren_prox"), TRUE);
+		precache_pic(strcat(weaponflash[i], "prox_gren"), TRUE);
 #endif
 	}
 	
