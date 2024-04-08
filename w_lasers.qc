@@ -59,8 +59,6 @@ static void () laser_touch =
 	}
 
 	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
-	// toodles: Spawn the cool laser effect, too!
-	particle (self.origin, trace_plane_normal * 0.01, 235, 15);
 
 	remove (self);
 }
