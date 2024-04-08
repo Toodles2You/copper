@@ -376,6 +376,7 @@ void() worldspawn =
 	precache_model ("progs/grenade.mdl");
 	precache_model ("progs/spike.mdl");
 	//precache_model ("progs/s_spike.mdl");
+	precache_model ("progs/proxbomb.mdl");
 	precache_model ("progs/lasrspik.mdl");
 
 	precache_model ("progs/backpack.mdl");

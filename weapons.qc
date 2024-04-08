@@ -44,6 +44,9 @@ void() W_Precache =
 	precache_sound ("hipweap/laserg.wav");		// laser cannon
 	precache_sound ("hipweap/laserric.wav");	// laser cannon ricochet
 
+	precache_sound ("hipweap/proxwarn.wav");	// proximity bomb
+	precache_sound ("hipweap/proxbomb.wav");	// proximity bomb
+
 #endif
 	
 
@@ -57,6 +60,7 @@ void() W_Precache =
 	precache_model ("progs/v_light.mdl");
 #ifdef HIPNOTIC
 	precache_model ("progs/v_laserg.mdl");
+	precache_model ("progs/v_prox.mdl");
 #endif
 
 }
@@ -126,6 +130,9 @@ vector(float weap) W_ItemForWeapon =
 		case WPN_LASER_CANNON:
 			fl_y = IT2_LASER_CANNON;
 			break;
+		case WPN_PROXIMITY_GUN:
+			fl_x = IT_PROXIMITY_GUN;
+			break;
 #endif
 		default:
 			break;
@@ -173,6 +180,11 @@ float(float item, float item2) W_WeaponForItem =
 		case IT_LIGHTNING:
 			weap = WPN_LIGHTNING;
 			break;
+#ifdef HIPNOTIC
+		case IT_PROXIMITY_GUN:
+			weap = WPN_PROXIMITY_GUN;
+			break;
+#endif
 		default:
 			break;
 	}
@@ -263,6 +275,10 @@ float(float w) W_RankForWeapon =
 #endif
 	if (w == WPN_SUPER_NAILGUN)
 		return 3;
+#ifdef HIPNOTIC
+	if (w == WPN_PROXIMITY_GUN)
+		return 3.1;
+#endif
 	if (w == WPN_GRENADE_LAUNCHER)
 		return 4;
 	if (w == WPN_SUPER_SHOTGUN)
@@ -310,6 +326,7 @@ float(float weap) W_HasAmmo =
 	if (weap == WPN_LIGHTNING)		return (self.ammo_cells >= 1);
 #ifdef HIPNOTIC
 	if (weap == WPN_LASER_CANNON)	return (self.ammo_cells >= 1);
+	if (weap == WPN_PROXIMITY_GUN)	return (self.ammo_rockets >= 1);
 #endif
 	if (weap == WPN_GRENADE_LAUNCHER || weap == WPN_ROCKET_LAUNCHER)
 		return (self.ammo_rockets >= 1);
@@ -391,6 +408,16 @@ void() W_ChangeWeapon =
 
 	weap = self.impulse;
 
+#ifdef HIPNOTIC
+	if (weap == WPN_GRENADE_LAUNCHER && W_HasWeapon (self, WPN_PROXIMITY_GUN))
+	{
+		if (self.weapon == WPN_GRENADE_LAUNCHER)
+		{
+			weap = WPN_PROXIMITY_GUN;
+		}
+	}
+#endif
+
 	if (!W_HasWeapon (self, weap))
 	{	// don't have the weapon or the ammo
 		sprint (self, "no weapon.\n");
@@ -416,11 +443,19 @@ for players who insist on shuffling through their inventory the slow way
 float W_Next(float w) =
 {
 	if (w == WPN_CYCLE_END) return WPN_CYCLE_START;
+#ifdef HIPNOTIC
+	if (w == WPN_GRENADE_LAUNCHER) return WPN_PROXIMITY_GUN;
+	if (w == WPN_PROXIMITY_GUN) return WPN_GRENADE_LAUNCHER + 1;
+#endif
 	return w + 1;
 }
 
 float W_Prev(float w) =
 {
+#ifdef HIPNOTIC
+	if (w == WPN_GRENADE_LAUNCHER + 1) return WPN_PROXIMITY_GUN;
+	if (w == WPN_PROXIMITY_GUN) return WPN_GRENADE_LAUNCHER;
+#endif
 	if (w == WPN_CYCLE_START) return WPN_CYCLE_END;
 	return w - 1;
 }
@@ -474,7 +509,11 @@ void() W_SetCurrentAmmo =
 		self.currentammo = self.ammo_nails;
 		self.items = self.items | IT_NAILS;
 	}
-	else if (self.weapon == WPN_GRENADE_LAUNCHER || self.weapon == WPN_ROCKET_LAUNCHER)
+	else if (self.weapon == WPN_GRENADE_LAUNCHER || self.weapon == WPN_ROCKET_LAUNCHER
+#ifdef HIPNOTIC
+		|| self.weapon == WPN_PROXIMITY_GUN
+#endif
+		)
 	{
 		self.currentammo = self.ammo_rockets;
 		self.items = self.items | IT_ROCKETS;
@@ -521,6 +560,8 @@ void() W_ResetWeaponState =
 #ifdef HIPNOTIC
 	else if (self.weapon == WPN_LASER_CANNON)
 		self.weaponmodel = "progs/v_laserg.mdl";
+	else if (self.weapon == WPN_PROXIMITY_GUN)
+		self.weaponmodel = "progs/v_prox.mdl";
 #endif
 	else
 		self.weaponmodel = string_null;
@@ -627,6 +668,11 @@ void() W_Attack =
 	{
 		player_laser ();
 		W_FireLaser ();
+	}
+	else if (self.weapon == WPN_PROXIMITY_GUN)
+	{
+		player_rocket1 ();
+		W_FireProximityGrenade ();
 	}
 #endif
 }

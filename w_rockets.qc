@@ -40,18 +40,15 @@ void() T_ExplosiveTouch =
 		BecomeExplosion();
 }
 
-void() T_MissileExplode =
+void(float radial, float direct) T_MissileExplode =
 {
-	local float	damg;
-	damg = 100 + random()*20;
-	
 	if (other.health)
 	{
-		T_Damage (other, self, self.trueowner, damg, DMGTYPE_EXPLOSION | DMGTYPE_ZKILL );	// so ogre rockets kill zombies despite being too weak
+		T_Damage (other, self, self.trueowner, direct, DMGTYPE_EXPLOSION | DMGTYPE_ZKILL );	// so ogre rockets kill zombies despite being too weak
 	}
 
 	// don't do radius damage to other, because all damage will be done in the impact
-	T_RadiusDamage (self, self.trueowner, 120, other, DMGTYPE_EXPLOSION);
+	T_RadiusDamage (self, self.trueowner, radial, other, DMGTYPE_EXPLOSION);
 }
 
 void() T_MissileTouch =
@@ -65,7 +62,7 @@ void() T_MissileTouch =
 		return;
 	}
 
-	T_MissileExplode();
+	T_MissileExplode(120, 100 + random()*20);
 
 	self.origin = self.origin - 8*normalize(self.velocity);
 	T_ExplosiveTouch();
@@ -120,7 +117,7 @@ void() GrenadeTouch =
 	if (other.takedamage == DAMAGE_AIM)
 	{
 		self.velocity = '0 0 0';
-		T_MissileExplode();
+		T_MissileExplode(120, 100 + random()*20);
 		T_ExplosiveTouch();
 		return;
 	}

@@ -354,6 +354,30 @@ void () weapon_laser_gun =
 	StartWeapon ();
 }
 
+/*QUAKED weapon_proximity_gun (0 0 1) (-16 -16 0) (16 16 56) ? ? SUSPENDED
+Proximity Gun.
+
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass base(Weapon) model({ "path": ":progs/g_prox.mdl" }) = weapon_proximity_gun : "Proximity Gun. 
+6 Rockets." []
+*/
+void () weapon_proximity_gun =
+{
+	if (!SUB_ShouldSpawn ()) return;
+	precache_model_safe ("progs/g_prox.mdl");
+	setmodel (self, "progs/g_prox.mdl");
+	self.weapon = WPN_PROXIMITY_GUN;
+	self.ammo_rockets = 6;
+	self.netname = "Proximity Gun";
+	StartWeapon ();
+}
+
 #endif /* HIPNOTIC */
 
 // ===============================================================================

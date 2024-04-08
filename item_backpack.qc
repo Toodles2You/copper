@@ -289,6 +289,8 @@ void() DropBackpack =
 #ifdef HIPNOTIC
 		else if (weap == WPN_LASER_CANNON)
 			item.netname = "Laser Cannon";
+		else if (weap == WPN_PROXIMITY_GUN)
+			item.netname = "Proximity Gun";
 #endif
 		else
 			item.netname = string_null;
