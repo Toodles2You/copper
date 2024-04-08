@@ -14,10 +14,28 @@ const float weaponflags[8] = {
 	IT_ROCKET_LAUNCHER,
 	IT_LIGHTNING
 };
-const float weaponbits[8] = { 12, 0, 1, 2, 3, 4, 5, 6 };
+
+#ifdef HIPNOTIC
+
+const float hipweaponflags[2] =
+{
+	// the laser cannon STAT_ACTIVEWEAPON will be the unshifted item flag
+	IT2_LASER_CANNON * IT2_SHIFT,
+	IT_MJOLNIR
+};
+
+const float hipweaponflags2[2] =
+{
+	IT2_LASER_CANNON,
+	0
+};
+
+#endif
+
+const float weaponbits[10] = { 12, 0, 1, 2, 3, 4, 5, 6, 23, 7 };
 
 const string weaponflash[6] = { "gfx/inv_","gfx/inv2_","gfx/inva2_","gfx/inva3_","gfx/inva4_","gfx/inva1_" };	// use selected glow as a better last frame
-const string weaponlabel[8] = {	"axe","shotgun","sshotgun","nailgun","snailgun","rlaunch","srlaunch","lightng" };
+const string weaponlabel[10] = {	"axe","shotgun","sshotgun","nailgun","snailgun","rlaunch","srlaunch","lightng","laser","mjolnir" };
 
 float stat_items, stat_items2, stat_health, keytype;
 float paintime, lookseed;
@@ -28,6 +46,7 @@ float coopdata;
 float scr_tint;
 vector scr_tintcolor;
 float noTint;
+float bigweaponwidth;
 
 const float MP_NARROW = 0;
 const float MP_MEDIUM = 1;
@@ -360,7 +379,7 @@ void(float wnum, vector pos, float sel) Hud_DrawWeapon
 	if (sel && fram == 0) fram = 1;	// selected weapon glow
 	
 	sz = '24 16';
-	if (wnum == 7) sz = '48 16';
+	if (wnum == 7) sz_x = bigweaponwidth;
 	
 	string pic = strcat(weaponflash[fram], weaponlabel[wnum]);
 	
@@ -478,6 +497,28 @@ void Hud_DrawIBarWeapons(vector pos)
 		if (stat_items & weaponflags[i+1])
 			Hud_DrawWeapon(i+1, pos + '24 0' * i, currweap == weaponflags[i+1]);
 	}
+
+#ifdef HIPNOTIC
+	pos_x += bigweaponwidth - 24;
+
+	for (i = 0; i < 2; i++)
+	{
+		// check the high item bits
+		if (hipweaponflags2[i] != 0)
+		{
+			if (!(stat_items2 & hipweaponflags2[i]))
+			{
+				continue;
+			}
+		}
+		else if (!(stat_items & hipweaponflags[i]))
+		{
+			continue;
+		}
+
+		Hud_DrawWeapon(7+i+1, pos + '24 0' * (7+i), currweap == hipweaponflags[i]);
+	}
+#endif
 }
 
 void Hud_DrawIBarPowerups(vector pos)
@@ -622,6 +663,31 @@ void Hud_DrawModernWeapons(vector pos)
 	pos += '0 -72';
 	float currweap = getstatf(STAT_ACTIVEWEAPON);
 	float i;
+
+#ifdef HIPNOTIC
+	for (i = 1; i >= 0; i--)
+	{
+		// check the high item bits
+		if (hipweaponflags2[i] != 0)
+		{
+			if (!(stat_items2 & hipweaponflags2[i]))
+			{
+				continue;
+			}
+		}
+		else if (!(stat_items & hipweaponflags[i]))
+		{
+			continue;
+		}
+
+		if (currweap == hipweaponflags[i])
+			Hud_DrawWeapon(8+i, pos + '-24 0', TRUE);
+		else
+			Hud_DrawWeapon(8+i, pos + '-16 0', FALSE);
+		pos += '0 16';
+	}
+#endif
+
 	for (i = 7; i >= 0; i--)
 	{
 		if (stat_items & weaponflags[i])
@@ -936,6 +1002,11 @@ void() Hud_Init
 	for (i = 0; i < 6; i++)
 	{
 		precache_pic(strcat(weaponflash[i], "axe"), TRUE);
+
+#ifdef HIPNOTIC
+		precache_pic(strcat(weaponflash[i], "laser"), TRUE);
+		precache_pic(strcat(weaponflash[i], "mjolnir"), TRUE);
+#endif
 	}
 	
 	precache_pic("gfx/sb_mkey1", TRUE);
@@ -989,6 +1060,12 @@ void() Hud_Init
 	
 	paintime = -1;
 	lookseed = floor(random() * 100);
+
+	vector sz = drawgetimagesize ("gfx/inv_lightng");
+	if (sz_x > 0)
+		bigweaponwidth = sz_x;
+	else
+		bigweaponwidth = 48;
 
 	//if (cvar("pr_checkextension"))
 	//	if (checkextension("EXT_CSQC"))

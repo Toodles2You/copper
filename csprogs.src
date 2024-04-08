@@ -1,4 +1,6 @@
 ../csprogs.dat
+#define HIPNOTIC 1
+
 defs.qc
 constants.qc
 maths.qc
