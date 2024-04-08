@@ -1847,7 +1847,7 @@ void(float dmgtype) ClientObituary =
 			
 			if (self.dmg_inflictor.classname == "proximity_grenade")
 			{
-				bprint (" was a bad demoman\n");
+				bprint (" is a bad demoman\n");
 			}
 			else if (self.dmg_inflictor.classname == "hiplaser")
 			{
