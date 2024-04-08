@@ -745,6 +745,20 @@ void Hud_DrawModernWeapons(vector pos)
 
 	for (i = 7; i >= 0; i--)
 	{
+		// grenade launcher and/or proximity gun
+		if (i == 5)
+		{
+			if (stat_items & weaponflags[5] || stat_items & hipweaponflags[2])
+			{
+				if (currweap == weaponflags[5] || currweap == hipweaponflags[2])
+					Hud_DrawAltWeapon (weaponflags[5], hipweaponflags[2], 5, 10, 11, 12, pos + '-24 0');
+				else
+					Hud_DrawAltWeapon (weaponflags[5], hipweaponflags[2], 5, 10, 11, 12, pos + '-16 0');
+			}
+			pos += '0 16';
+			continue;
+		}
+
 		if (stat_items & weaponflags[i])
 		{
 			if (currweap == weaponflags[i])
