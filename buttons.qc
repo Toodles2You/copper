@@ -119,13 +119,13 @@ float(entity inflictor, entity attacker) button_check_attacker =
 	if (attacker.classname != "player")
 		return FALSE;
 	
-	switch(self.weapon) {
+	switch(self.weaponindex) {
 	// axe/lg/shotguns are instant, can just check immediate status
 	case 1:
 		return (self.customflags & CFL_AXEHITME);
 	case 2:
 	case 3:
-		return (attacker.weapon == WPN_SHOTGUN || attacker.weapon == WPN_SUPER_SHOTGUN);
+		return (attacker.weaponindex == WPN_SHOTGUN || attacker.weaponindex == WPN_SUPER_SHOTGUN);
 	case 8:
 		return (self.customflags & CFL_ZAPPED);
 	// projectiles must be checked directly since the player can fire and then switch weapons

@@ -75,7 +75,7 @@ void() SetNewParms =
 	parm1 = IT_SHOTGUN | IT_AXE;
 	parm2 = 100;
 	parm4 = 25;
-	parm8 = WPN_SHOTGUN;
+	parm8 = IT_SHOTGUN;
 	parm3 = 0;
 	parm5 = 0;
 	parm6 = 0;
@@ -93,9 +93,9 @@ void() SetCoopParms =
 	parm2 = 100;
 	parm4 = max(25,self.ammo_shells);
 	if (W_HasWeapon (self, WPN_SUPER_SHOTGUN))
-		parm8 = WPN_SUPER_SHOTGUN;
+		parm8 = IT_SUPER_SHOTGUN;
 	else
-		parm8 = WPN_SHOTGUN;
+		parm8 = IT_SHOTGUN;
 
 	parm3 = 0;
 	parm5 = self.ammo_nails;
@@ -120,9 +120,20 @@ void() DecodeLevelParms =
 	self.ammo_cells = parm7;
 	self.armortype = parm9;
 	self.items2 = parm10;
-	
-	//self.weapon = parm8;
-	W_Select(parm8);
+
+	vector fl;
+	if (parm8 >= IT2_SHIFT)
+	{
+		fl_y = floor (parm8 / IT2_SHIFT);
+		fl_x = parm8 - fl_y * IT2_SHIFT;
+	}
+	else
+	{
+		fl_x = parm8;
+		fl_y = 0;
+	}
+
+	W_Select (W_WeaponForItem (fl_x, fl_y));
 	armor_set_type(self);
 }
 
@@ -1388,7 +1399,7 @@ void() CheckPowerups =
 		self.modelindex = modelindex_eyes;
 	}
 #ifdef HIPNOTIC
-	else if (self.weapon == WPN_MJOLNIR)
+	else if (self.weaponindex == WPN_MJOLNIR)
 	{
 		self.modelindex = modelindex_hammer;
 	}
@@ -1584,7 +1595,7 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if (time > self.attack_finished && !W_HasAmmo(self.weapon))
+	if (time > self.attack_finished && !W_HasAmmo(self.weaponindex))
 	{
 		W_SelectBestWeapon();
 	}
@@ -1834,21 +1845,21 @@ void(float dmgtype) ClientObituary =
 			attacker.frags = attacker.frags - 1;
 			bprint (self.netname);
 			
-			if (self.weapon == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
+			if (self.weaponindex == WPN_LIGHTNING && self.waterlevel >= WL_WAIST)
 			{
 				bprint (" discharges into the water\n");
 				return;
 			}
-			else if (self.weapon == WPN_GRENADE_LAUNCHER)
+			else if (self.weaponindex == WPN_GRENADE_LAUNCHER)
 				bprint (" tries to put the pin back in\n");
-			else if (self.weapon == WPN_ROCKET_LAUNCHER)
+			else if (self.weaponindex == WPN_ROCKET_LAUNCHER)
 			{
 				if (random() < 0.5)
 					bprint (" rocket-jumps into the next world\n");
 				else
 					bprint (" is no rocket surgeon\n");
 			}
-			else if (self.weapon == WPN_LASER_CANNON)
+			else if (self.weaponindex == WPN_LASER_CANNON)
 			{
 				bprint (" caught their own laser\n");
 			}
@@ -1884,7 +1895,7 @@ void(float dmgtype) ClientObituary =
 			if (deathmatch)
 				attacker.frags = attacker.frags + 1;
 
-			rnum = attacker.weapon;
+			rnum = attacker.weaponindex;
 			if (rnum == WPN_AXE)
 			{
 				if (random() < 0.5)

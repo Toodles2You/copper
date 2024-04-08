@@ -158,6 +158,7 @@ const float	IT_POWERUPS				= IT_INVISIBILITY + IT_INVULNERABILITY + IT_SUIT + IT
 // more IT flags after this exceeds 1^23, causing FPU bugs and unpredictable behavior
 
 // items2
+const float	IT2_SHIFT				= 8388608;
 const float	IT2_LASER_CANNON		= 1;
 const float	IT2_WEAPONS				= 1;
 

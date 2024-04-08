@@ -326,7 +326,7 @@ void(entity e, float new) W_BetterWeapon =
 			return;
 	}	
 	self = e;
-	if (!deathmatch || W_RankForWeapon (new) < W_RankForWeapon (self.weapon) )
+	if (!deathmatch || W_RankForWeapon (new) < W_RankForWeapon (self.weaponindex) )
 		W_Select(new);
 	self = oself;
 }
@@ -472,28 +472,28 @@ float W_Prev(float w) =
 // cycle weapon up
 void() CycleWeaponCommand =
 {
-	float weap = self.weapon;
+	float weap = self.weaponindex;
 	if (!weap)
 		weap = W_BestWeapon();
 	else do {
 		weap = W_Next(weap);
 		if (W_HasWeapon (self, weap) && W_HasAmmo(weap))
 			break;
-	} while (weap != self.weapon);
+	} while (weap != self.weaponindex);
 	W_Select (weap);
 }
 
 // cycle weapon down
 void() CycleWeaponReverseCommand =
 {
-	float weap = self.weapon;
+	float weap = self.weaponindex;
 	if (!weap)
 		weap = W_BestWeapon();
 	else do {
 		weap = W_Prev(weap);
 		if (W_HasWeapon (self, weap) && W_HasAmmo(weap))
 			break;
-	} while (weap != self.weapon);
+	} while (weap != self.weaponindex);
 	W_Select (weap);
 }
 
@@ -508,29 +508,29 @@ void() W_SetCurrentAmmo =
 {
 	self.items = self.items - ( self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS) );
 	
-	if (self.weapon == WPN_SHOTGUN || self.weapon == WPN_SUPER_SHOTGUN)
+	if (self.weaponindex == WPN_SHOTGUN || self.weaponindex == WPN_SUPER_SHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
 		self.items = self.items | IT_SHELLS;
 	}
-	else if (self.weapon == WPN_NAILGUN || self.weapon == WPN_SUPER_NAILGUN)
+	else if (self.weaponindex == WPN_NAILGUN || self.weaponindex == WPN_SUPER_NAILGUN)
 	{
 		self.currentammo = self.ammo_nails;
 		self.items = self.items | IT_NAILS;
 	}
-	else if (self.weapon == WPN_GRENADE_LAUNCHER || self.weapon == WPN_ROCKET_LAUNCHER
+	else if (self.weaponindex == WPN_GRENADE_LAUNCHER || self.weaponindex == WPN_ROCKET_LAUNCHER
 #ifdef HIPNOTIC
-		|| self.weapon == WPN_PROXIMITY_GUN
+		|| self.weaponindex == WPN_PROXIMITY_GUN
 #endif
 		)
 	{
 		self.currentammo = self.ammo_rockets;
 		self.items = self.items | IT_ROCKETS;
 	}
-	else if (self.weapon == WPN_LIGHTNING
+	else if (self.weaponindex == WPN_LIGHTNING
 #ifdef HIPNOTIC
-		|| self.weapon == WPN_LASER_CANNON
-		|| self.weapon == WPN_MJOLNIR
+		|| self.weaponindex == WPN_LASER_CANNON
+		|| self.weaponindex == WPN_MJOLNIR
 #endif
 		)
 	{
@@ -551,28 +551,28 @@ void() W_ResetWeaponState =
 	//self.attack_finished = 0;	// don't lose attack debounce time from last attack,
 		// if any, or picking up/switching weapons can cause double attacks
 	
-	if (self.weapon == WPN_AXE )
+	if (self.weaponindex == WPN_AXE )
 		self.weaponmodel = "progs/v_axe2.mdl";
-	else if (self.weapon == WPN_SHOTGUN)
+	else if (self.weaponindex == WPN_SHOTGUN)
 		self.weaponmodel = "progs/v_shot.mdl";
-	else if (self.weapon == WPN_SUPER_SHOTGUN)
+	else if (self.weaponindex == WPN_SUPER_SHOTGUN)
 		self.weaponmodel = "progs/v_shot2.mdl";
-	else if (self.weapon == WPN_NAILGUN)
+	else if (self.weaponindex == WPN_NAILGUN)
 		self.weaponmodel = "progs/v_nail.mdl";
-	else if (self.weapon == WPN_SUPER_NAILGUN)
+	else if (self.weaponindex == WPN_SUPER_NAILGUN)
 		self.weaponmodel = "progs/v_nail2.mdl";
-	else if (self.weapon == WPN_GRENADE_LAUNCHER)
+	else if (self.weaponindex == WPN_GRENADE_LAUNCHER)
 		self.weaponmodel = "progs/v_rock.mdl";
-	else if (self.weapon == WPN_ROCKET_LAUNCHER)
+	else if (self.weaponindex == WPN_ROCKET_LAUNCHER)
 		self.weaponmodel = "progs/v_rock2.mdl";
-	else if (self.weapon == WPN_LIGHTNING)
+	else if (self.weaponindex == WPN_LIGHTNING)
 		self.weaponmodel = "progs/v_light.mdl";
 #ifdef HIPNOTIC
-	else if (self.weapon == WPN_LASER_CANNON)
+	else if (self.weaponindex == WPN_LASER_CANNON)
 		self.weaponmodel = "progs/v_laserg.mdl";
-	else if (self.weapon == WPN_MJOLNIR)
+	else if (self.weaponindex == WPN_MJOLNIR)
 		self.weaponmodel = "progs/v_hammer.mdl";
-	else if (self.weapon == WPN_PROXIMITY_GUN)
+	else if (self.weaponindex == WPN_PROXIMITY_GUN)
 		self.weaponmodel = "progs/v_prox.mdl";
 #endif
 	else
@@ -590,20 +590,25 @@ void() W_SelectLastWeapon =
 /*
 ============
 W_Select
-This should be the only function that changes .weapon
+This should be the only function that changes .weaponindex
 ============
 */
 float(float weap) W_Select =
 {
 	if (weap != WPN_NONE)
 	{
-		if (self.weapon == weap) return TRUE;
+		if (self.weaponindex == weap) return TRUE;
 		if (!W_HasWeapon(self, weap)) return FALSE;
 		if (!W_HasAmmo(weap)) return FALSE;
-		self.attack_state = self.weapon;
+		self.attack_state = self.weaponindex;
 	}
 
-	self.weapon = weap;
+	self.weaponindex = weap;
+
+	// set the weapon bit as the original quake client expects
+	vector fl = W_ItemForWeapon (weap);
+	self.weapon = fl_x + fl_y * IT2_SHIFT;
+
 	W_ResetWeaponState();
 	return TRUE;
 }
@@ -620,10 +625,10 @@ An attack impulse can be triggered now
 */
 void() W_Attack =
 {
-	if (self.weapon != WPN_NONE && !W_HasAmmo(self.weapon))
+	if (self.weaponindex != WPN_NONE && !W_HasAmmo(self.weaponindex))
 	{
 		W_SelectBestWeapon();
-		if (self.weapon == WPN_NONE || self.weapon == WPN_AXE)
+		if (self.weaponindex == WPN_NONE || self.weaponindex == WPN_AXE)
 		{
 			sprint (self, "not enough ammo.\n");
 			return;
@@ -634,14 +639,14 @@ void() W_Attack =
 
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 
-	if (self.weapon == WPN_AXE)
+	if (self.weaponindex == WPN_AXE)
 	{
 		player_axe();
 		W_AxeSwing();
 		return;
 	}
 #ifdef HIPNOTIC
-	else if (self.weapon == WPN_MJOLNIR)
+	else if (self.weaponindex == WPN_MJOLNIR)
 	{
 		// this didn't match up with the ammo needed to perform the lightning attack for some reason
 		if (self.ammo_cells < 15)
@@ -656,44 +661,44 @@ void() W_Attack =
 	// moved after axe so that silent swings don't wake monsters
 	self.show_hostile = time + 1;
 	
-	if (self.weapon == WPN_SHOTGUN)
+	if (self.weaponindex == WPN_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireShotgun ();
 	}
-	else if (self.weapon == WPN_SUPER_SHOTGUN)
+	else if (self.weaponindex == WPN_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireSuperShotgun ();
 	}
-	else if (self.weapon == WPN_NAILGUN || self.weapon == WPN_SUPER_NAILGUN)
+	else if (self.weaponindex == WPN_NAILGUN || self.weaponindex == WPN_SUPER_NAILGUN)
 	{
 		player_nail();
 		W_FireSpikes ();
 	}
-	else if (self.weapon == WPN_GRENADE_LAUNCHER)
+	else if (self.weaponindex == WPN_GRENADE_LAUNCHER)
 	{
 		player_rocket1();
 		W_FireGrenade();
 	}
-	else if (self.weapon == WPN_ROCKET_LAUNCHER)
+	else if (self.weaponindex == WPN_ROCKET_LAUNCHER)
 	{
 		player_rocket1();
 		W_FireRocket();
 	}
-	else if (self.weapon == WPN_LIGHTNING)
+	else if (self.weaponindex == WPN_LIGHTNING)
 	{
 		player_light1();
 		self.attack_finished = time + 0.1;
 		sound (self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
 #ifdef HIPNOTIC
-	else if (self.weapon == WPN_LASER_CANNON)
+	else if (self.weaponindex == WPN_LASER_CANNON)
 	{
 		player_laser ();
 		W_FireLaser ();
 	}
-	else if (self.weapon == WPN_PROXIMITY_GUN)
+	else if (self.weaponindex == WPN_PROXIMITY_GUN)
 	{
 		player_rocket1 ();
 		W_FireProximityGrenade ();

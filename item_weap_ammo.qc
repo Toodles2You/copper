@@ -36,7 +36,7 @@ void() weapon_touch_coop =
 
 void(entity to) weapon_give =
 {
-	W_SetHasWeapon (to, self.weapon, TRUE);
+	W_SetHasWeapon (to, self.weaponindex, TRUE);
 	to.ammo_shells += self.ammo_shells;
 	to.ammo_nails += self.ammo_nails;
 	to.ammo_rockets += self.ammo_rockets;
@@ -69,28 +69,28 @@ void() weapon_touch =
 		leave = 0;
 	
 	// backwards compatibility
-	if (!self.weapon && self.items)
+	if (!self.weaponindex && self.items)
 	{
-		self.weapon = W_WeaponForItem (self.items, 0);
+		self.weaponindex = W_WeaponForItem (self.items, self.items2);
 	}
 
 	if (leave)
 	{
-		if (W_HasWeapon (other, self.weapon))	// already have it
+		if (W_HasWeapon (other, self.weaponindex))	// already have it
 		{
 			weapon_touch_coop();
 			return;
 		}
 	}
 	
-	if (W_HasWeapon (other, self.weapon)) nsw = TRUE;
+	if (W_HasWeapon (other, self.weaponindex)) nsw = TRUE;
 
 	weapon_give(other);
 	// change to the weapon
 	if (nsw)
 		SUB_CallAsSelf(W_ResetWeaponState, other);
 	else
-		W_BetterWeapon(other, self.weapon);
+		W_BetterWeapon(other, self.weaponindex);
 
 	if (coop == 1)
 	{
@@ -124,7 +124,7 @@ void() StartWeapon =
 	setsize (self, '-16 -16 0', '16 16 56');
 	if (deathmatch == 1)
 		self.wait = 30;
-	W_SetHasWeapon (self, self.weapon, TRUE);
+	W_SetHasWeapon (self, self.weaponindex, TRUE);
 	StartItem ();
 }
 
@@ -154,7 +154,7 @@ void() weapon_shotgun =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model3 ("progs/g_shotgn.mdl");
 	setmodel (self, "progs/g_shotgn.mdl");
-	self.weapon = WPN_SHOTGUN;
+	self.weaponindex = WPN_SHOTGUN;
 	self.ammo_shells = 5;
 	self.netname = "Shotgun";
 	StartWeapon();
@@ -179,7 +179,7 @@ void() weapon_supershotgun =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_shot.mdl");
 	setmodel (self, "progs/g_shot.mdl");
-	self.weapon = WPN_SUPER_SHOTGUN;
+	self.weaponindex = WPN_SUPER_SHOTGUN;
 	self.ammo_shells = 10;
 	self.netname = "Double-barreled Shotgun";
 	StartWeapon();
@@ -203,7 +203,7 @@ void() weapon_nailgun =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_nail.mdl");
 	setmodel (self, "progs/g_nail.mdl");
-	self.weapon = WPN_NAILGUN;
+	self.weaponindex = WPN_NAILGUN;
 	self.ammo_nails = 30;
 	self.netname = "Nailgun";
 	StartWeapon();
@@ -227,7 +227,7 @@ void() weapon_supernailgun =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_nail2.mdl");
 	setmodel (self, "progs/g_nail2.mdl");
-	self.weapon = WPN_SUPER_NAILGUN;
+	self.weaponindex = WPN_SUPER_NAILGUN;
 	self.ammo_nails = 30;
 	self.netname = "Perforator";
 	StartWeapon();
@@ -251,7 +251,7 @@ void() weapon_grenadelauncher =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_rock.mdl");
 	setmodel (self, "progs/g_rock.mdl");
-	self.weapon = WPN_GRENADE_LAUNCHER;
+	self.weaponindex = WPN_GRENADE_LAUNCHER;
 	self.ammo_rockets = 5;
 	self.netname = "Grenade Launcher";
 	StartWeapon();
@@ -275,7 +275,7 @@ void() weapon_rocketlauncher =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_rock2.mdl");
 	setmodel (self, "progs/g_rock2.mdl");
-	self.weapon = WPN_ROCKET_LAUNCHER;
+	self.weaponindex = WPN_ROCKET_LAUNCHER;
 	self.ammo_rockets = 5;
 	self.netname = "Rocket Launcher";
 	StartWeapon();
@@ -300,7 +300,7 @@ void() weapon_lightning =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_light.mdl");
 	setmodel (self, "progs/g_light.mdl");
-	self.weapon = WPN_LIGHTNING;
+	self.weaponindex = WPN_LIGHTNING;
 	self.ammo_cells = 12;
 	self.netname = "Thunderbolt";
 	StartWeapon();
@@ -323,7 +323,7 @@ void() weapon_axe =
 	if (!SUB_ShouldSpawn()) return;
 	precache_model_safe ("progs/g_axe.mdl");
 	setmodel (self, "progs/g_axe.mdl");
-	self.weapon = WPN_AXE;
+	self.weaponindex = WPN_AXE;
 	self.netname = "Axe. Find some wood!";
 	StartWeapon();
 }
@@ -348,7 +348,7 @@ void () weapon_mjolnir =
 	if (!SUB_ShouldSpawn ()) return;
 	precache_model_safe ("progs/g_hammer.mdl");
 	setmodel (self, "progs/g_hammer.mdl");
-	self.weapon = WPN_MJOLNIR;
+	self.weaponindex = WPN_MJOLNIR;
 	self.ammo_cells = 30;
 	self.netname = "Mjolnir";
 	StartWeapon ();
@@ -372,7 +372,7 @@ void () weapon_laser_gun =
 	if (!SUB_ShouldSpawn ()) return;
 	precache_model_safe ("progs/g_laserg.mdl");
 	setmodel (self, "progs/g_laserg.mdl");
-	self.weapon = WPN_LASER_CANNON;
+	self.weaponindex = WPN_LASER_CANNON;
 	self.ammo_cells = 30;
 	self.netname = "Laser Cannon";
 	StartWeapon ();
@@ -396,7 +396,7 @@ void () weapon_proximity_gun =
 	if (!SUB_ShouldSpawn ()) return;
 	precache_model_safe ("progs/g_prox.mdl");
 	setmodel (self, "progs/g_prox.mdl");
-	self.weapon = WPN_PROXIMITY_GUN;
+	self.weaponindex = WPN_PROXIMITY_GUN;
 	self.ammo_rockets = 6;
 	self.netname = "Proximity Gun";
 	StartWeapon ();

@@ -108,7 +108,7 @@ void() W_FireSpikes =
 		W_SelectBestWeapon();
 		return;
 	}
-	if (self.ammo_nails >= 2 && self.weapon == WPN_SUPER_NAILGUN)
+	if (self.ammo_nails >= 2 && self.weaponindex == WPN_SUPER_NAILGUN)
 	{
 		W_FirePerforator();
 	}

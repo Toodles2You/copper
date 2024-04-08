@@ -171,7 +171,7 @@ void() ImpulseCommands =
 	if (self.impulse >= WPN_AXE && self.impulse <= WPN_LIGHTNING)
 	{
 #ifdef HIPNOTIC
-		if (self.impulse == WPN_GRENADE_LAUNCHER && self.weapon == WPN_GRENADE_LAUNCHER)
+		if (self.impulse == WPN_GRENADE_LAUNCHER && self.weaponindex == WPN_GRENADE_LAUNCHER)
 		{
 			if (W_HasWeapon (self, WPN_PROXIMITY_GUN))
 			{

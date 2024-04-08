@@ -60,19 +60,19 @@ void() BackpackTouch =
 	sprint (other, "You got ");
 
 	// backwards compatibility
-	if (!self.weapon && self.items)
+	if (!self.weaponindex && self.items)
 	{
-		self.weapon = W_WeaponForItem (self.items, 0);
+		self.weaponindex = W_WeaponForItem (self.items, self.items2);
 	}
 
-	if (self.weapon != WPN_NONE && W_SetHasWeapon (other, self.weapon, TRUE))
+	if (self.weaponindex != WPN_NONE && W_SetHasWeapon (other, self.weaponindex, TRUE))
 	{
 		acount = TRUE;
 		sprint (other, "the ");
 		sprint (other, self.netname);
 	
 		// change to the weapon
-		W_BetterWeapon(other, self.weapon);
+		W_BetterWeapon(other, self.weaponindex);
 	}
 
 	if (self.armorvalue)
@@ -127,7 +127,7 @@ void() BackpackTouch =
 	stuffcmd (other, "bf\n");
 
 	if ((coop == 1 && self.buddy && self.buddy == other)
-		|| (!other.weapon))
+		|| (!other.weaponindex))
 		SUB_CallAsSelf(W_SelectBestWeapon, other);		
 	else
 		SUB_CallAsSelf(W_SetCurrentAmmo, other);
@@ -264,12 +264,13 @@ void() DropBackpack =
 	
 	if (coop != 1)
 	{
-		float weap = self.weapon;
-		item.weapon = weap;
+		float weap = self.weaponindex;
+		item.weaponindex = weap;
 		
 		vector fl = W_ItemForWeapon (weap);
 		item.items = fl_x;
-		
+		item.items2 = fl_y;
+
 		if (weap == WPN_AXE)
 			item.netname = string_null;
 		else if (weap == WPN_SHOTGUN)
