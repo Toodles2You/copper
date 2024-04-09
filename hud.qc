@@ -595,6 +595,12 @@ void Hud_DrawIBarPowerups(vector pos)
 		Hud_DrawInvuln(pos + '16 0');
 	if (stat_items & IT_QUAD)
 		Hud_DrawQuad(pos + '48 0');
+#ifdef HIPNOTIC
+	if (stat_items2 & IT2_WETSUIT)
+		drawpic(pos + '64 0', "gfx/sb_wsuit", '16 16', '1 1 1', 1, 0);
+	if (stat_items2 & IT2_EMPATHY_SHIELDS)
+		drawpic(pos + '80 0', "gfx/sb_eshld", '16 16', '1 1 1', 1, 0);
+#endif
 }
 
 void Hud_DrawIBar(vector pos)
@@ -1081,6 +1087,12 @@ void() Hud_Init
 		precache_pic(strcat(powerupflash[i], "suit"), TRUE);
 		precache_pic(strcat(powerupflash[i], "quad"), TRUE);
 	}
+
+#ifdef HIPNOTIC
+	precache_pic ("gfx/sb_wsuit", TRUE);
+	precache_pic ("gfx/sb_eshld", TRUE);
+#endif
+
 	for (i = 0; i < 6; i++)
 	{
 		precache_pic(strcat(weaponflash[i], "axe"), TRUE);
