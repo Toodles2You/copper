@@ -563,6 +563,20 @@ void(entity e) target_items_giveinv =
 			
 		target_items_setweapon(e);
 	}
+
+	if (self.items2)
+	{
+		float it2 = zeroconvert (self.items2);
+
+#ifdef HIPNOTIC
+		if (it2 & IT2_WETSUIT)
+			powerup_wetsuit (e, self.length);
+		
+		if (it2 & IT2_EMPATHY_SHIELDS)
+			powerup_empathy_shields (e, self.length);
+#endif
+	}
+	
 	SUB_CallAsSelf(W_ResetWeaponState, e);
 }
 
@@ -684,6 +698,27 @@ float(entity e) target_items_takeinv =
 			
 	}
 	
+	if (self.items2)
+	{
+		float it2 = zeroconvert (self.items2);
+
+#ifdef HIPNOTIC
+		if (it2 & IT2_WETSUIT)
+		{
+			e.items2 = not (e.items2, it2 & IT2_WETSUIT);
+			e.wetsuit_finished = 0;
+			e.wetsuit_time = 0;
+		}
+
+		if (it2 & IT2_EMPATHY_SHIELDS)
+		{
+			e.items2 = not (e.items2, it2 & IT2_EMPATHY_SHIELDS);
+			e.empathy_finished = 0;
+			e.empathy_time = 0;
+		}
+#endif
+	}
+	
 	target_items_setweapon(e);
 	
 	return TRUE;
@@ -787,6 +822,32 @@ void(entity e) target_items_setinv =
 
 		target_items_setweapon(e);
 	}
+	
+	if (self.items2)
+	{
+		float it2 = zeroconvert (self.items2);
+
+#ifdef HIPNOTIC
+		if (it2 & IT2_WETSUIT)
+			powerup_wetsuit (e, self.length);
+		else
+		{
+			e.items2 = not (e.items2, IT2_WETSUIT);
+			e.wetsuit_finished = 0;
+			e.wetsuit_time = 0;
+		}
+
+		if (it2 & IT2_EMPATHY_SHIELDS)
+			powerup_empathy_shields (e, self.length);
+		else
+		{
+			e.items2 = not (e.items2, IT2_EMPATHY_SHIELDS);
+			e.empathy_finished = 0;
+			e.empathy_time = 0;
+		}
+#endif
+	}
+
 	SUB_CallAsSelf(W_ResetWeaponState, e);
 	
 	// after resetweaponstate or else deadthink will be overwritten

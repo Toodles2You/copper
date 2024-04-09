@@ -30,10 +30,10 @@ static void (vector p1, vector p2, entity from, float damage) W_HammerDamage =
 
 	traceline2 (p1, p2, self, 0);
 
-	if (trace_ent.takedamage /*&& !trace_ent.wetsuit_finished*/)
+	if (trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
 		particle (trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage (trace_ent, from, from, damage);
+		T_Damage (trace_ent, from, from, damage, DMGTYPE_LIGHTNING);
 
 		if (self.classname == "player" && other.classname == "player")
 		{
@@ -44,19 +44,19 @@ static void (vector p1, vector p2, entity from, float damage) W_HammerDamage =
 
 	traceline2 (p1 + f, p2 + f, self, 0);
 
-	if (trace_ent != e1 && trace_ent.takedamage /*&& !trace_ent.wetsuit_finished*/)
+	if (trace_ent != e1 && trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
 		particle (trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage (trace_ent, from, from, damage);
+		T_Damage (trace_ent, from, from, damage, DMGTYPE_LIGHTNING);
 	}
 	e2 = trace_ent;
 
 	traceline2 (p1 - f, p2 - f, self, 0);
 
-	if (trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage /*&& !trace_ent.wetsuit_finished*/)
+	if (trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
 		particle (trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage (trace_ent, from, from, damage);
+		T_Damage (trace_ent, from, from, damage, DMGTYPE_LIGHTNING);
 	}
 }
 
@@ -85,7 +85,7 @@ static void () W_LightningThink =
 		selected = world;
 		cur_dist = self.distance;
 
-		head = findradius(self.owner.origin, self.distance);
+		head = findradius (self.owner.origin, self.distance);
 		while (head)
 		{
 			if (!(head.flags & FL_NOTARGET) && (head.flags & (FL_MONSTER | FL_CLIENT)))
@@ -212,7 +212,7 @@ static void () W_SpawnMjolnirBase =
 	W_SpawnMjolnirLightning (e, e, 350);
 	W_SpawnMjolnirLightning (e, e, 350);
 	W_SpawnMjolnirLightning (e, e, 350);
-};
+}
 
 void (vector source) W_FireMjolnirLightning =
 {
@@ -226,7 +226,7 @@ void (vector source) W_FireMjolnirLightning =
 		self.ammo_cells = 0;
 		W_SetCurrentAmmo ();
 
-		T_RadiusDamage (self, self, 35 * cells, world, DMGTYPE_EXPLOSION);
+		T_RadiusDamage (self, self, 35 * cells, world, DMGTYPE_EXPLOSION | DMGTYPE_LIGHTNING);
 
 		sound (self, CHAN_WEAPON, "hipweap/mjolhit.wav", 1, ATTN_NORM);
 		return;

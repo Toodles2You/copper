@@ -60,6 +60,36 @@ void(entity h, float t) powerup_super_damage =
 	h.super_time = 1;
 }
 
+#ifdef HIPNOTIC
+
+/*
+===============
+powerup_wetsuit
+===============
+*/
+void(entity h, float t) powerup_wetsuit =
+{
+	sprint (h, "This thing is chafing ...\n");
+	h.items2 |= IT2_WETSUIT;
+	h.wetsuit_finished = time + t;
+	h.wetsuit_time = 1;
+}
+
+/*
+===============
+powerup_empathy_shields
+===============
+*/
+void(entity h, float t) powerup_empathy_shields =
+{
+	sprint (h, "A vicarious energy whirls around you ...\n");
+	h.items2 |= IT2_EMPATHY_SHIELDS;
+	h.empathy_finished = time + t;
+	h.empathy_time = 1;
+}
+
+#endif /* HIPNOTIC */
+
 /*
 ===============
 powerup_touch
@@ -72,18 +102,27 @@ void() powerup_touch =
 	sound (other, CHAN_POWERUP, self.noise, 1, ATTN_NORM);
 	stuffcmd (other, "bf\n");
 	other.items = other.items | self.items;
+	other.items2 = other.items2 | self.items2;
 
 	if (self.classname == "item_artifact_envirosuit")
 		powerup_envirosuit(other, 30);
 	
-	if (self.classname == "item_artifact_invulnerability")
+	else if (self.classname == "item_artifact_invulnerability")
 		powerup_invulnerability(other, 30);
 	
-	if (self.classname == "item_artifact_invisibility")
+	else if (self.classname == "item_artifact_invisibility")
 		powerup_invisibility(other, 30);
 
-	if (self.classname == "item_artifact_super_damage")
+	else if (self.classname == "item_artifact_super_damage")
 		powerup_super_damage(other, 30);
+
+#ifdef HIPNOTIC
+	else if (self.classname == "item_artifact_wetsuit")
+		powerup_wetsuit(other, 30);
+	
+	else if (self.classname == "item_artifact_empathy_shields")
+		powerup_empathy_shields(other, 30);
+#endif
 
 	ItemTouched();
 }
@@ -265,6 +304,100 @@ void() item_artifact_super_damage =
 		self.wait = 60;
 	StartItem ();
 }
+
+
+#ifdef HIPNOTIC
+
+/*
+===============================================================================
+
+WETSUIT
+
+===============================================================================
+*/
+void() precache_wetsuit =
+{
+	precache_model_safe ("progs/wetsuit.mdl");
+	precache_sound_safe ("misc/wetsuit.wav");
+	precache_sound_safe ("misc/weton.wav");
+	precache_sound_safe ("items/suit2.wav");
+}
+
+/*QUAKED item_artifact_wetsuit (0 .5 .5) (-16 -16 -24) (16 16 32) ? ? SUSPENDED
+Wetsuit. Player takes no damage from electrical attacks and swims faster for 30 seconds.
+
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass size(-16 -16 -24, 16 16 32) color(255 0 0) base(Item) model({ "path": ":progs/wetsuit.mdl" }) = item_artifact_wetsuit : 
+	"Wetsuit. Player takes no damage from electrical attacks and swims faster for 30 seconds." []
+*/
+void() item_artifact_wetsuit =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.touch = powerup_touch;
+
+	precache_wetsuit();
+	setmodel (self, "progs/wetsuit.mdl");
+	self.netname = "Wetsuit";
+	self.noise = "misc/weton.wav";
+	self.items2 = IT2_WETSUIT;
+	setsize (self, '-16 -16 -24', '16 16 32');
+	if (deathmatch)
+		self.wait = 60;
+	StartItem ();
+}
+
+
+/*
+===============================================================================
+
+EMPATHY SHIELDS
+
+===============================================================================
+*/
+void() precache_empathy_shields =
+{
+	precache_model_safe ("progs/empathy.mdl");
+	precache_sound_safe ("hipitems/empathy.wav");
+	precache_sound_safe ("hipitems/empathy2.wav");
+	precache_sound_safe ("items/suit2.wav");
+}
+
+/*QUAKED item_artifact_empathy_shields (0 .5 .5) (-16 -16 -24) (16 16 32) ? ? SUSPENDED
+Empathy Shields.
+
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass size(-16 -16 -24, 16 16 32) color(255 0 0) base(Item) model({ "path": ":progs/empathy.mdl" }) = item_artifact_empathy_shields : 
+	"Empathy Shields." []
+*/
+void() item_artifact_empathy_shields =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.touch = powerup_touch;
+
+	precache_empathy_shields();
+	setmodel (self, "progs/empathy.mdl");
+	self.netname = "Empathy Shields";
+	self.noise = "hipitems/empathy.wav";
+	self.items2 = IT2_EMPATHY_SHIELDS;
+	setsize (self, '-16 -16 0', '16 16 32');
+	if (deathmatch)
+		self.wait = 60;
+	StartItem ();
+}
+
+#endif /* HIPNOTIC */
 
 
 

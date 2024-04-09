@@ -150,6 +150,34 @@ void() Cheat_Suit =
 	powerup_envirosuit(self, 30);
 }
 
+#ifdef HIPNOTIC
+
+// --------------------------------
+// Cheat_Wetsuit
+// --------------------------------
+void() Cheat_Wetsuit =
+{
+	if(deathmatch || coop)
+		return;
+	stuffcmd(self, "bf\n");
+	self.items2 = self.items2 | IT2_WETSUIT;
+	powerup_wetsuit(self, 30);
+}
+
+// --------------------------------
+// Cheat_Empathy
+// --------------------------------
+void() Cheat_Empathy =
+{
+	if(deathmatch || coop)
+		return;
+	stuffcmd(self, "bf\n");
+	self.items2 = self.items2 | IT2_EMPATHY_SHIELDS;
+	powerup_empathy_shields(self, 30);
+}
+
+#endif
+
 // --------------------------------
 // ServerflagsCommand
 // --------------------------------
@@ -288,6 +316,14 @@ void() ImpulseCommands =
 	case 200:
 		dev_remaining_monsters();
 		break;
+#ifdef HIPNOTIC
+	case 201:
+		Cheat_Empathy ();
+		break;
+	case 202:
+		Cheat_Wetsuit ();
+		break;
+#endif
 	case 210:
 		toggle_autosave();
 		break;

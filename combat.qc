@@ -430,6 +430,17 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 			damage -= 3;
 	}
 	
+#ifdef HIPNOTIC
+	//check for empathy shields
+	if (has_empathy (targ) && !has_empathy (attacker) && targ != attacker)
+	{
+		damage = damage * 0.5;
+		T_Damage (attacker, targ, targ, damage, 0);
+		// just play the freaking sound here why do you over-complicate everything hipnotic
+		sound (targ, CHAN_ITEM, "hipitems/empathy2.wav", 1, ATTN_NORM);
+	}
+#endif
+	
 	// variety is the spice of life:
 	// scrags will happily fly down into slime, and they do spit green shit anyway
 	if (targ.classname == "monster_wizard" && (dmgtype & DMGTYPE_SLIME))
@@ -482,6 +493,11 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 		}
 		return;
 	}
+
+#ifdef HIPNOTIC
+	if (has_wetsuit(targ) && (dmgtype & DMGTYPE_LIGHTNING))
+		return;
+#endif
 
 	// team play damage avoidance
 	if (teamplay && attacker.classname == "player")

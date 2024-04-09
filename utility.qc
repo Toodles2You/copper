@@ -195,6 +195,10 @@ float(entity who) has_invis = { return (who.items & IT_INVISIBILITY || who.invis
 float(entity who) has_quad = { return (who.items & IT_QUAD || who.super_damage_finished > time); }
 float(entity who) has_invuln = { return (who.items & IT_INVULNERABILITY || who.invincible_finished > time); }
 float(entity who) has_biosuit = { return (who.items & IT_SUIT || who.radsuit_finished > time); }
+#ifdef HIPNOTIC
+float(entity who) has_wetsuit = { return (who.items2 & IT2_WETSUIT || who.wetsuit_finished > time); }
+float(entity who) has_empathy = { return (who.items2 & IT2_EMPATHY_SHIELDS || who.empathy_finished > time); }
+#endif
 
 //============================================================================
 

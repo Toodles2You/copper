@@ -331,6 +331,11 @@ float sandyMadeThis; // for special-casing SOMEBODY's stale keyvalues and clumsy
 .float		items2;
 .float		weaponindex;
 
+#ifdef HIPNOTIC
+.float		empathy_time, empathy_finished;
+.float		wetsuit_time, wetsuit_finished;
+#endif
+
 #ifndef NO_CSQC
 // fields for csqc HUD stats
 .float		clientdata;

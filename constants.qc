@@ -140,9 +140,25 @@ const float	IT_ROCKET_LAUNCHER		= 32;
 const float	IT_LIGHTNING			= 64;
 #ifdef HIPNOTIC
 const float IT_MJOLNIR				= 128;
-const float	IT_WEAPONS				= 127 + 65536 + 128 + 4096;
+const float	IT_WEAPONS				= IT_AXE
+										+ IT_SHOTGUN
+										+ IT_SUPER_SHOTGUN
+										+ IT_NAILGUN
+										+ IT_SUPER_NAILGUN
+										+ IT_GRENADE_LAUNCHER
+										+ IT_ROCKET_LAUNCHER
+										+ IT_LIGHTNING;
 #else
-const float	IT_WEAPONS				= 127 + 4096;
+const float	IT_WEAPONS				= IT_AXE
+										+ IT_SHOTGUN
+										+ IT_SUPER_SHOTGUN
+										+ IT_NAILGUN
+										+ IT_SUPER_NAILGUN
+										+ IT_GRENADE_LAUNCHER
+										+ IT_PROXIMITY_GUN
+										+ IT_ROCKET_LAUNCHER
+										+ IT_LIGHTNING
+										+ IT_MJOLNIR;
 #endif
 
 const float	IT_SHELLS				= 256;
@@ -166,11 +182,19 @@ const float	IT_POWERUPS				= IT_INVISIBILITY + IT_INVULNERABILITY + IT_SUIT + IT
 
 // items2
 const float	IT2_SHIFT				= 8388608;
+
 #ifdef HIPNOTIC
 const float	IT2_LASER_CANNON		= 1;
-const float	IT2_WEAPONS				= 1;
+const float	IT2_WEAPONS				= IT2_LASER_CANNON;
+
+const float	IT2_WETSUIT				= 2;
+const float	IT2_EMPATHY_SHIELDS		= 4;
+const float	IT2_HORN_OF_CONJURING	= 8;
+const float	IT2_POWERUPS			= IT2_WETSUIT + IT2_EMPATHY_SHIELDS + IT2_HORN_OF_CONJURING;
 #else
 const float	IT2_WEAPONS				= 0;
+
+const float	IT2_POWERUPS			= 0;
 #endif
 
 const float	IT2_SIGIL1				= 32;

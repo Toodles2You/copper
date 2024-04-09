@@ -558,9 +558,14 @@ void() PlayerDie =
 	self.invincible_finished = 0;
 	self.super_damage_finished = 0;
 	self.radsuit_finished = 0;
+#ifdef HIPNOTIC
+	self.wetsuit_finished = 0;
+	self.empathy_finished = 0;
+#endif
 	self.modelindex = modelindex_player;	// don't use eyes
 
-	self.items = not(self.items, IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
+	self.items = not (self.items, IT_POWERUPS);
+	self.items2 = not (self.items2, IT2_POWERUPS);
 	self.effects = 0;
 
 	clientsAlive -= 1;

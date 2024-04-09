@@ -259,6 +259,10 @@ entity( void() spawnthink ) mon_spawner_use =
 	mon.invisible_finished = self.invisible_finished;
 	mon.super_damage_finished = self.super_damage_finished;
 	mon.radsuit_finished = self.radsuit_finished;
+#ifdef HIPNOTIC
+	mon.wetsuit_finished = self.wetsuit_finished;
+	mon.empathy_finished = self.empathy_finished;
+#endif
 	mon.health = self.health;
 	mon.delay = self.delay;
 	mon.message = self.message;

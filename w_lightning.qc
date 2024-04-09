@@ -309,7 +309,7 @@ void() W_FireLightning =
 		cells = self.ammo_cells;
 		self.ammo_cells = 0;
 		W_SetCurrentAmmo ();
-		T_RadiusDamage (self, self, 35*cells, world, DMGTYPE_EXPLOSION);
+		T_RadiusDamage (self, self, 35*cells, world, DMGTYPE_EXPLOSION | DMGTYPE_LIGHTNING);
 		return;
 	}
 

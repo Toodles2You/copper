@@ -22,10 +22,8 @@ void() SetChangeParms =
 	}
 
 	// remove items
-	self.items = self.items - (self.items & (
-		IT_KEY1 | IT_KEY2 | 
-		IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD
-		) );
+	self.items = not (self.items, IT_KEY1 | IT_KEY2 | IT_POWERUPS);
+	self.items2 = not (self.items2, IT2_POWERUPS);
 	
 	// gung-ho players can run forward and grab weapons before other clients have
 	// finished connecting, causing them to miss out on the global distribution
@@ -648,6 +646,10 @@ void() PutClientInServer =
 	self.notrace = 0;	// fix for dying with the ring
 	self.invincible_finished = 0;
 	self.invincible_time = 0;
+#ifdef HIPNOTIC
+	self.wetsuit_finished = 0;
+	self.empathy_finished = 0;
+#endif
 	self.effects = 0;
 	self.enemy = world;
 
@@ -1153,6 +1155,68 @@ void() PlayerWaterTest =
 	self.watertype = min(wt,self.watertype);
 }
 
+#ifdef HIPNOTIC
+
+static float wetsuit_speed;
+
+/*
+===========
+WetsuitMove
+
+speed up the player when underwater
+============
+*/
+static void () WetsuitMove =
+{
+	if (has_wetsuit (self) && self.waterlevel >= WL_WAIST)
+	{
+		wetsuit_speed = vlensqr (self.velocity);
+
+		if (self.waterlevel >= WL_EYES)
+			self.velocity *= 1.5;
+		else
+			self.velocity *= 1.25;
+	}
+	else
+	{
+		wetsuit_speed = 0;
+	}
+}
+
+/*
+===========
+WetsuitPostMove
+
+restore speed
+============
+*/
+static void () WetsuitPostMove =
+{
+	float adj, len;
+
+	if (wetsuit_speed != 0)
+	{
+		if (has_wetsuit (self) && self.waterlevel >= WL_WAIST)
+		{
+			// determine what speed we began the move with
+			if (self.waterlevel >= WL_EYES)
+				adj = wetsuit_speed * 1.5;
+			else
+				adj = wetsuit_speed * 1.25;
+
+			len = vlensqr (self.velocity);
+
+			// if we haven't bumped anything and/or stopped, slow back to our original speed
+			if (len >= adj)
+				self.velocity = (self.velocity / sqrt (len)) * sqrt (wetsuit_speed);
+		}
+
+		wetsuit_speed = 0;
+	}
+}
+
+#endif /* HIPNOTIC */
+
 /*
 ===========
 WaterMove
@@ -1228,7 +1292,14 @@ void() WaterMove =
 		// again, you start to drown sooner the next time
 		if (self.air_finished < time + self.dmg / 2)
 		{	// drown!
-			if (self.pain_finished < time)
+			if (has_wetsuit (self))
+			{
+				self.air_finished = time + 12;
+				// play scuba sound
+				sound (self, CHAN_BODY, "misc/wetsuit.wav", 1, ATTN_NORM);
+				DeathBubbles (1);
+			}
+			else if (self.pain_finished < time)
 			{
 				T_Damage (self, world, world, max(self.dmg, 1), DMGTYPE_DROWNING | DMGTYPE_NOARMOR);
 				self.pain_finished = time + 1;
@@ -1508,6 +1579,66 @@ void() CheckPowerups =
 		}
 	}	
 
+#ifdef HIPNOTIC
+
+	if (self.wetsuit_finished)
+	{
+		// sound and screen flash when items starts to run out
+		if (self.wetsuit_finished < time + 3)
+		{
+			if (self.wetsuit_time == 1)
+			{
+				sprint (self, "Air supply in Wetsuit is running out ...\n");
+				stuffcmd (self, "bf\n");
+				sound (self, CHAN_POWERUP, "items/suit2.wav", 1, ATTN_NORM);
+				self.wetsuit_time = time + 1;
+			}
+			
+			if (self.wetsuit_time < time)
+			{
+				self.wetsuit_time = time + 1;
+				stuffcmd (self, "bf\n");
+			}
+		}
+
+		if (self.wetsuit_finished < time)
+		{	// just stopped
+			self.air_finished = time + 12;
+			self.items2 = not (self.items2, IT2_WETSUIT);
+			self.wetsuit_time = 0;
+			self.wetsuit_finished = 0;
+		}
+	}
+
+	if (self.empathy_finished)
+	{
+		// sound and screen flash when items starts to run out
+		if (self.empathy_finished < time + 3)
+		{
+			if (self.empathy_time == 1)
+			{
+				sprint (self, "Empathy Shields are running out ...\n");
+				stuffcmd (self, "bf\n");
+				sound (self, CHAN_POWERUP, "items/suit2.wav", 1, ATTN_NORM);
+				self.empathy_time = time + 1;
+			}
+			
+			if (self.empathy_time < time)
+			{
+				self.empathy_time = time + 1;
+				stuffcmd (self, "bf\n");
+			}
+		}
+
+		if (self.empathy_finished < time)
+		{	// just stopped
+			self.items2 = not (self.items2, IT2_EMPATHY_SHIELDS);
+			self.empathy_time = 0;
+			self.empathy_finished = 0;
+		}
+	}
+
+#endif /* HIPNOTIC */
 }
 
 // a failed experiment to fix DOOF-DOOF-DOOFing down stairs
@@ -1579,6 +1710,9 @@ void() PlayerPreThink =
 	
 	PlayerWaterTest();
 	WaterMove();
+#ifdef HIPNOTIC
+	WetsuitMove ();
+#endif
 	if (self.waterlevel == WL_WAIST)
 		CheckWaterJump ();
 
@@ -1632,6 +1766,10 @@ void() PlayerPostThink =
 		return;
 	}
 	
+#ifdef HIPNOTIC
+	WetsuitPostMove ();
+#endif
+
 	// do weapon stuff
 	W_WeaponFrame ();
 	// do health stuff

@@ -131,7 +131,8 @@ turn off glow and screen coloring while we're in a camera
 */
 void(entity who) ClearItemEffects =
 {
-	who.items = not(who.items, IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
+	who.items = not (who.items, IT_POWERUPS);
+	who.items2 = not (who.items2, IT2_POWERUPS);
 	who.effects = 0;
 
 	// remember how much time was left on the powerup
@@ -143,6 +144,12 @@ void(entity who) ClearItemEffects =
 		who.invisible_finished -= time;
 	if (who.super_damage_finished > time)
 		who.super_damage_finished -= time;
+#ifdef HIPNOTIC
+	if (who.wetsuit_finished > time)
+		who.wetsuit_finished -= time;
+	if (who.empathy_finished > time)
+		who.empathy_finished -= time;
+#endif
 	/*
 	who.rad_time = 0;
 	who.invincible_time = 0;
@@ -179,6 +186,18 @@ void(entity who) RestoreItemEffects =
 		who.super_damage_finished += time;
 		who.items += IT_QUAD;
 	}
+#ifdef HIPNOTIC
+	if ( who.wetsuit_finished > 0 )
+	{
+		who.wetsuit_finished += time;
+		who.items2 += IT2_WETSUIT;
+	}
+	if ( who.empathy_finished > 0 )
+	{
+		who.empathy_finished += time;
+		who.items2 += IT2_EMPATHY_SHIELDS;
+	}
+#endif
 }
 
 
