@@ -582,6 +582,8 @@ void() SightSound =
 		sound (self, CHAN_VOICE, "soldier/sight1.wav", 1, ATTN_NORM);
 	else if (self.classname == "monster_shalrath")
 		sound (self, CHAN_VOICE, "shalrath/sight.wav", 1, ATTN_NORM);
+	else if (self.classname == "monster_scourge")
+		sound (self, CHAN_VOICE, "scourge/sight.wav", 1, ATTN_NORM);
 }
 
 void() FoundTarget =
@@ -1481,6 +1483,29 @@ void() ai_turn =
 	ChangeYaw ();
 }
 
+/*
+=============
+ai_turn_in_place
+
+don't move, but turn towards ideal_yaw
+=============
+*/
+void() ai_turn_in_place =
+{
+	float delta;
+	self.nextthink = time + 0.1;
+	delta = fabs (self.angles_y - enemy_yaw ());
+
+	if (delta > 10)
+	{
+		self.ideal_yaw = enemy_yaw ();
+		ChangeYaw ();
+	}
+	else
+	{
+		self.think = self.th_run;
+	}
+}
 
 //============================================================================
 
@@ -1560,6 +1585,25 @@ void(float dist) ai_run_slide =
 	walkmoveplus (self.ideal_yaw - ofs, dist);
 }
 
+/*
+=============
+ai_right
+=============
+*/
+void(float dist) ai_right =
+{
+	walkmoveplus (self.angles_y + 90, dist);
+}
+
+/*
+=============
+ai_left
+=============
+*/
+void(float dist) ai_left =
+{
+	walkmoveplus (self.angles_y - 90, dist);
+}
 
 /*
 =============
