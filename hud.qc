@@ -308,6 +308,13 @@ void Hud_DrawSBar(vector pos)
 	else
 		Hud_DrawLargeValue(pos + '96 0', value, 25);
 
+#ifdef HIPNOTIC
+	if (stat_items & IT_KEY1)
+		drawpic (pos + '208 3', "sb_key1", '16 9', '1 1 1', 1, 0);
+	if (stat_items & IT_KEY2)
+		drawpic (pos + '208 12', "sb_key2", '16 9', '1 1 1', 1, 0);
+#endif
+
 	value = clampf(getstatf(STAT_AMMO), 999);
 	Hud_DrawCurrentAmmoIcon(pos + '224 0');
 	Hud_DrawLargeValue(pos+'320 0', value, 10);
@@ -608,8 +615,10 @@ void Hud_DrawIBar(vector pos)
 	Hud_DrawAmmoCount(3, pos + '154 0');
 
 	Hud_DrawIBarWeapons(pos);
+#ifndef HIPNOTIC
 	Hud_DrawKeys(pos + '192 8', IT_KEY1);
 	Hud_DrawKeys(pos + '208 8', IT_KEY2);
+#endif
 
 	Hud_DrawIBarPowerups(pos + '224 8');
 	Hud_DrawSigils(pos + '288 8');
