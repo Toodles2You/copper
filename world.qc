@@ -312,8 +312,10 @@ void() worldspawn =
 	precache_sound ("items/inv3.wav");			// ring (idle)
 	precache_sound ("items/damage2.wav");		// quad (finish)
 	precache_sound ("items/damage3.wav");		// quad (attack)
+#ifdef HIPNOTIC
 	precache_sound ("misc/wetsuit.wav");		// wets (breathe)
-	precache_sound ("items/empathy2.wav");		// epth (protect)
+	precache_sound ("hipitems/empathy2.wav");	// epth (protect)
+#endif
 // iw -- END
 
 	// items
