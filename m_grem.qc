@@ -1070,6 +1070,7 @@ see if we can steal enemy's weapon
 */
 static float (entity victim) steal_weapon =
 {
+	entity grem;
 	vector delta, fl;
 	float weap, a;
 
@@ -1146,7 +1147,19 @@ static float (entity victim) steal_weapon =
 	sprint (victim, "\n");
 
 	// force the victim to switch weapons
-	SUB_CallAsSelf (W_SelectBestWeapon, victim);
+	// SUB_CallAsSelf (W_SelectBestWeapon, victim);
+
+	// have the player switch manually, so they actually figure out
+	// what happened instead of just going 'why did my weapon change'
+	grem = self;
+	self = victim;
+	W_Select (WPN_NONE);
+	self = grem;
+
+	// some visual & auditory cues
+	victim.punchangle_x = 4;
+	stuffcmd (victim, "bf\n");
+	sound (victim, CHAN_VOICE, "player/axhit1.wav", 1, ATTN_NORM);
 
 	// tag the gremlin as having stolen a weapon
 	self.customflags |= CFL_STOLEWEAPON;
