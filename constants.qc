@@ -28,6 +28,7 @@ const float	CFL_LEFTY			= 1;	// used by slidemovers (scrags) to alternate strafe
 const float	CFL_RETURNED		= 1;	// zombie has already respawned in nightmare
 const float	CFL_INVLIGHT			= 1;	// for backwards bmover light fade behavior
 const float	CFL_STOLEWEAPON		= 1;	// gremlin has nabbed a weapon
+const float	CFL_MISSILEATTACK	= 1;
 const float	CFL_ZAPPED			= 2;
 const float	CFL_AXEHITME		= 4;
 const float	CFL_LOCKED			= 16;	// special state-independent deactivation

@@ -582,6 +582,7 @@ void() SightSound =
 		sound (self, CHAN_VOICE, "soldier/sight1.wav", 1, ATTN_NORM);
 	else if (self.classname == "monster_shalrath")
 		sound (self, CHAN_VOICE, "shalrath/sight.wav", 1, ATTN_NORM);
+#ifdef HIPNOTIC
 	else if (self.classname == "monster_gremlin")
 	{
 		if (!(self.customflags & CFL_STOLEWEAPON))
@@ -589,6 +590,9 @@ void() SightSound =
 	}
 	else if (self.classname == "monster_scourge")
 		sound (self, CHAN_VOICE, "scourge/sight.wav", 1, ATTN_NORM);
+	else if (self.classname == "monster_armagon")
+		sound (self, CHAN_VOICE, "armagon/sight.wav", 1, 0.1);
+#endif
 }
 
 void() FoundTarget =

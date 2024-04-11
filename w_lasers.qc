@@ -81,10 +81,10 @@ static void () laser_think =
 /*
 ========
 launch_cannonlaser
-used by the player laser cannon
+used by the player laser cannon & armagon
 ========
 */
-static entity (vector org, vector vel, float damage, float lit) launch_cannonlaser =
+entity (vector org, vector vel, float damage, float lit) launch_cannonlaser =
 {
 	entity spike;
 
