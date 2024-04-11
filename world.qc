@@ -360,6 +360,11 @@ void() worldspawn =
 	precache_sound ("misc/water1.wav");			// swimming
 	precache_sound ("misc/water2.wav");			// swimming
 
+#ifdef HIPNOTIC
+	precache_sound ("misc/shortexp.wav");
+	precache_sound ("misc/longexpl.wav");
+#endif
+
 	precache_model ("progs/player.mdl");
 	precache_model ("progs/eyes.mdl");
 	precache_model ("progs/h_player.mdl");

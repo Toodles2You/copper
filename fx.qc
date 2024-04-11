@@ -39,16 +39,20 @@ void()	s_explode6	=	[5,		SUB_Remove] {}
 // 0: original
 // 1: grape
 // 2: marshmallow
+// 3: original w/o particles
 void(float blasttype) BecomeBlast = 
 {
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	if (blasttype == 1)
-		WriteByte (MSG_BROADCAST, TE_TAREXPLOSION);
-	else
-		WriteByte (MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord (MSG_BROADCAST, self.origin_x);
-	WriteCoord (MSG_BROADCAST, self.origin_y);
-	WriteCoord (MSG_BROADCAST, self.origin_z);
+	if (blasttype != 3)
+	{
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		if (blasttype == 1)
+			WriteByte (MSG_BROADCAST, TE_TAREXPLOSION);
+		else
+			WriteByte (MSG_BROADCAST, TE_EXPLOSION);
+		WriteCoord (MSG_BROADCAST, self.origin_x);
+		WriteCoord (MSG_BROADCAST, self.origin_y);
+		WriteCoord (MSG_BROADCAST, self.origin_z);
+	}
 	
 	if (blasttype == 2)
 		setmodel (self, "progs/s_explo2.spr");
@@ -65,6 +69,7 @@ void(float blasttype) BecomeBlast =
 void() BecomeExplosion = { BecomeBlast(0); }
 void() BecomeTarExplosion = { BecomeBlast(1); }
 void() BecomeWeakExplosion = { BecomeBlast(2); }
+void() BecomeCrappyExplosion = { BecomeBlast(3); }
 
 void() fx_explode =
 {
