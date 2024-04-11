@@ -6,6 +6,8 @@ SCOURGE
 ==============================================================================
 */
 
+#ifdef HIPNOTIC
+
 $cd hipwork/models/scourge
 $origin 0 0 23
 $base base
@@ -423,13 +425,16 @@ static void () monster_scourge_spawn =
 	self.yaw_speed = 60;
 	self.trigger_field = scourge_spawn_field (self);
 
+	if (self.deathtype == string_null)
+		self.deathtype = "was stung by a Centroid";
+
 	walkmonster_start ();
 }
 
 void () monster_scourge_spawner = {mon_spawner_use (monster_scourge_spawn);}
 
 /*QUAKED monster_scourge (1 0 0) (-32 -32 -24) (32 32 40) AMBUSH ? ? ? TRIGGERED NOTFOG NOTELEFRAG INSTAWAKE
-Scourge, 300 health points.
+Centroid, 300 health points.
 
 Flags:
 "ambush" only wake up on seeing the player, not another monster getting angry
@@ -445,7 +450,7 @@ Keys:
 "movedir" set to a velocity to make the monster jump on awakening
 */
 /*FGD
-@PointClass base(Monster) size(-32 -32 -24, 32 32 64) model({ "path": ":progs/scor.mdl" }) = monster_scourge : "Scourge" []
+@PointClass base(Monster) size(-32 -32 -24, 32 32 64) model({ "path": ":progs/scor.mdl" }) = monster_scourge : "Centroid" []
 */
 void () monster_scourge =
 {
@@ -478,3 +483,5 @@ void () monster_scourge =
 	addmonster (1);
 	monster_scourge_spawn ();
 }
+
+#endif /* HIPNOTIC */
