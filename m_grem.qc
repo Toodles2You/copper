@@ -66,7 +66,7 @@ $frame grun8 grun9 grun10 grun11 grun12 grun13 grun14 grun15
 
 static void () drop_da_weapon =
 {
-	if (self.weaponindex != WPN_NONE)
+	if (!coop && self.weaponindex != WPN_NONE)
 	{
 		// make sure it isn't negative
 		self.ammo_shells = max (0, self.ammo_shells);
@@ -1093,9 +1093,10 @@ static float (entity victim) steal_weapon =
 	 || victim.weaponindex > WPN_LASER_CANNON)
 		return FALSE;
 	
-	// take that weapon from the entity
 	weap = victim.weaponindex;
-	W_SetHasWeapon (victim, weap, FALSE);
+	if (!coop)
+		// take that weapon from the entity
+		W_SetHasWeapon (victim, weap, FALSE);
 
 	// give it to our gremlin
 	W_SetHasWeapon (self, weap, TRUE);
@@ -1112,14 +1113,16 @@ static float (entity victim) steal_weapon =
 		case WPN_SHOTGUN:
 		case WPN_SUPER_SHOTGUN:
 			a = min (victim.ammo_shells, 20);
-			victim.ammo_shells -= a;
+			if (!coop)
+				victim.ammo_shells -= a;
 			self.ammo_shells += a;
 			self.items |= IT_SHELLS;
 			break;
 		case WPN_NAILGUN:
 		case WPN_SUPER_NAILGUN:
 			a = min (victim.ammo_nails, 40);
-			victim.ammo_nails -= a;
+			if (!coop)
+				victim.ammo_nails -= a;
 			self.ammo_nails += a;
 			self.items |= IT_NAILS;
 			break;
@@ -1127,14 +1130,16 @@ static float (entity victim) steal_weapon =
 		case WPN_PROXIMITY_GUN:
 		case WPN_ROCKET_LAUNCHER:
 			a = min (victim.ammo_rockets, 5);
-			victim.ammo_rockets -= a;
+			if (!coop)
+				victim.ammo_rockets -= a;
 			self.ammo_rockets += a;
 			self.items |= IT_ROCKETS;
 			break;
 		case WPN_LIGHTNING:
 		case WPN_LASER_CANNON:
 			a = min (victim.ammo_cells, 40);
-			victim.ammo_cells -= a;
+			if (!coop)
+				victim.ammo_cells -= a;
 			self.ammo_cells += a;
 			self.items |= IT_CELLS;
 			break;
@@ -1146,15 +1151,18 @@ static float (entity victim) steal_weapon =
 	sprint (victim, weapon_strings[self.weaponindex]);
 	sprint (victim, "\n");
 
-	// force the victim to switch weapons
-	// SUB_CallAsSelf (W_SelectBestWeapon, victim);
+	if (!coop)
+	{
+		// force the victim to switch weapons
+		// SUB_CallAsSelf (W_SelectBestWeapon, victim);
 
-	// have the player switch manually, so they actually figure out
-	// what happened instead of just going 'why did my weapon change'
-	grem = self;
-	self = victim;
-	W_Select (WPN_NONE);
-	self = grem;
+		// have the player switch manually, so they actually figure out
+		// what happened instead of just going 'why did my weapon change'
+		grem = self;
+		self = victim;
+		W_Select (WPN_NONE);
+		self = grem;
+	}
 
 	// some visual & auditory cues
 	victim.punchangle_x = 4;
