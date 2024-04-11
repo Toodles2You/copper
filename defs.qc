@@ -414,6 +414,7 @@ float sandyMadeThis; // for special-casing SOMEBODY's stale keyvalues and clumsy
 .float version = worldtype;
 .string	model2 = wad;		// for debris emitter
 .string model3 = map;
+.entity lastvictim = buddy;
 
 
 //===========================================================================

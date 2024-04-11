@@ -202,6 +202,13 @@ float() crandom =
 	return 2*(random() - 0.5);
 }
 
+float() signrandom =
+{
+	if (random () > 0.5)
+		return 1;
+	return -1;
+}
+
 vector(vector v) vabs =
 {
 	return Vector(fabs(v_x),fabs(v_y),fabs(v_z));
