@@ -47,12 +47,18 @@ const float ATTN_ARMAGON = 0.5;
 
 static void () servo =
 {
-	sound (self, 7, "armagon/servo.wav", 0.5, ATTN_ARMAGON);
+	sound (self, CHAN_BODY, "armagon/servo.wav", 0.5, ATTN_ARMAGON);
 }
 
 static void () footfall =
 {
-	sound (self, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON);
+	if (self.buddy != world)
+	{
+		setorigin (self.buddy, self.origin + [0, 0, self.absmin_z]);
+		SUB_CallAsSelf (screenshake_use, self.buddy);
+	}
+
+	sound (self, CHAN_OTHER, "armagon/footfall.wav", 1, ATTN_ARMAGON);
 }
 
 static void () armagon_idle =
@@ -611,6 +617,12 @@ void() armagon_die14 = [$ldie12, armagon_die14]
 	self.trigger_field.think = armagon_body_explode1;
 	self.trigger_field.nextthink = time + 0.1;
 	self.trigger_field.customflags |= CFL_GORGEDUPON;
+
+	if (self.buddy != world)
+	{
+		remove (self.buddy);
+		self.buddy = world;
+	}
 }
 
 //============================================================================
@@ -674,6 +686,15 @@ static void () monster_armagon_spawn =
 	entity body;
 
 	self.classname = "monster_armagon";
+
+	// shake entity used when one of armagon's feet hit the ground
+	self.buddy = spawn ();
+	self.buddy.delay = 0;
+	self.buddy.length = 0.2;
+	self.buddy.wait = 0.2;
+	self.buddy.strength = 0.3;
+	self.buddy.distance = 768;
+	SUB_CallAsSelf (target_screenshake, self.buddy);
 
 	body = spawn();
 	body.origin = self.origin;
