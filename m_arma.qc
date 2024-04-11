@@ -100,16 +100,15 @@ static void (float angdelta, float delta) armagon_turn =
 
 static void () armagon_turn_think =
 {
-	float delta, angdelta;
+	float dir, delta, angdelta;
 	setorigin (self.trigger_field, self.origin);
 
 	self.trigger_field.angles = self.angles;
 	self.trigger_field.frame = self.frame;
 	self.trigger_field.angles_y = self.trigger_field.angles_y + self.fixangle;
 
-	self.ideal_yaw = vectoyaw (self.enemy.origin - self.origin);
-
-	delta = self.ideal_yaw - self.angles_y;
+	dir = enemy_yaw ();
+	delta = dir - self.angles_y;
 	self.cnt = 0;
 
 	if (delta > 180) delta = delta - 360;
@@ -188,13 +187,12 @@ static void () armagon_walkthink =
 	FoundTarget ();
 }
 
-// fixme: armagon awkwardly walks away into a corner when the player dies
 static void () armagon_walk =
 {
 	if (!ai_check_liquid ())
 		return;
 
-	movetogoal (14);
+	movetogoalplus (14);
 	armagon_walkthink ();
 }
 
@@ -215,7 +213,6 @@ void() armagon_walk12 = [$lwalk12, armagon_walk1] {armagon_walk ();}
 
 static void () armagon_run =
 {
-	ChangeYaw ();
 	// this seems unnecessary
 	// RUN_STRAIGHT = 1;
 	ai_run (14);
@@ -311,42 +308,43 @@ static void (float ofs, float turn, float laser) armagon_launch_projectile =
 
 //============================================================================
 
-void() armagon_watk1 = [$lw0fir1, armagon_watk2] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk2 = [$lw0fir2, armagon_watk3] {servo ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk3 = [$lw0fir3, armagon_watk4] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk4 = [$lw0fir4, armagon_watk5] {footfall ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk5 = [$lw0fir5, armagon_watk6] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk6 = [$lw0fir6, armagon_watk7] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();armagon_launch_projectile (40, 0, FALSE);}
-void() armagon_watk7 = [$lw0fir7, armagon_watk8] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk8 = [$lw0fir8, armagon_watk9] {servo ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk9 = [$lw0fir9, armagon_watk10] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk10 = [$lw0fir10, armagon_watk11] {footfall ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_watk11 = [$lw0fir11, armagon_watk13] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();armagon_launch_projectile (-40, 0, FALSE);}
-void() armagon_watk13 = [$lw0fir12, armagon_run1] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();ai_attack_finished (1.0);}
+void() armagon_watk1 = [$lw0fir1, armagon_watk2] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk2 = [$lw0fir2, armagon_watk3] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk3 = [$lw0fir3, armagon_watk4] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk4 = [$lw0fir4, armagon_watk5] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk5 = [$lw0fir5, armagon_watk6] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk6 = [$lw0fir6, armagon_watk7] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (40, 0, FALSE);}
+void() armagon_watk7 = [$lw0fir7, armagon_watk8] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk8 = [$lw0fir8, armagon_watk9] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk9 = [$lw0fir9, armagon_watk10] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk10 = [$lw0fir10, armagon_watk11] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_watk11 = [$lw0fir11, armagon_watk13] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (-40, 0, FALSE);}
+void() armagon_watk13 = [$lw0fir12, armagon_run1] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); ai_attack_finished (1.0);}
 
 //============================================================================
 
-void() armagon_wlaseratk1 = [$lw0fir1, armagon_wlaseratk2] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk2 = [$lw0fir2, armagon_wlaseratk3] {servo ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk3 = [$lw0fir3, armagon_wlaseratk4] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk4 = [$lw0fir4, armagon_wlaseratk5] {footfall ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk5 = [$lw0fir5, armagon_wlaseratk6] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk6 = [$lw0fir6, armagon_wlaseratk7] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();armagon_launch_projectile (40, 0, TRUE);}
-void() armagon_wlaseratk7 = [$lw0fir7, armagon_wlaseratk8] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk8 = [$lw0fir8, armagon_wlaseratk9] {servo ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk9 = [$lw0fir9, armagon_wlaseratk10] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk10 = [$lw0fir10, armagon_wlaseratk11] {footfall ();ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();}
-void() armagon_wlaseratk11 = [$lw0fir11, armagon_wlaseratk13] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_wlaseratk13 = [$lw0fir12, armagon_run1] {ChangeYaw();walkmove (self.angles_y, 14);armagon_think ();ai_attack_finished (1.0);}
+void() armagon_wlaseratk1 = [$lw0fir1, armagon_wlaseratk2] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk2 = [$lw0fir2, armagon_wlaseratk3] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk3 = [$lw0fir3, armagon_wlaseratk4] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk4 = [$lw0fir4, armagon_wlaseratk5] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk5 = [$lw0fir5, armagon_wlaseratk6] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk6 = [$lw0fir6, armagon_wlaseratk7] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (40, 0, TRUE);}
+void() armagon_wlaseratk7 = [$lw0fir7, armagon_wlaseratk8] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk8 = [$lw0fir8, armagon_wlaseratk9] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk9 = [$lw0fir9, armagon_wlaseratk10] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk10 = [$lw0fir10, armagon_wlaseratk11] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
+void() armagon_wlaseratk11 = [$lw0fir11, armagon_wlaseratk13] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (-40, 0, TRUE);}
+void() armagon_wlaseratk13 = [$lw0fir12, armagon_run1] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); ai_attack_finished (1.0);}
 
 //============================================================================
 
 static void (float ang, float ofs) armagon_overturn_think =
 {
-	float delta, angdelta;
+	float dir, delta, angdelta;
 
-	ChangeYaw ();
+	ai_face ();
 	walkmove (self.angles_y, 14);
+
 	setorigin (self.trigger_field, self.origin);
 	self.trigger_field.angles = self.angles;
 	self.trigger_field.frame = self.frame;
@@ -354,8 +352,8 @@ static void (float ang, float ofs) armagon_overturn_think =
 
 	if (self.count == 0)
 	{
-		self.ideal_yaw = vectoyaw (self.enemy.origin - self.origin);
-		delta = self.ideal_yaw - self.angles_y + ang;
+		dir = enemy_yaw ();
+		delta = dir - self.angles_y + ang;
 		if (delta > 180) delta = delta - 360;
 		if (delta < -180) delta = delta + 360;
 		angdelta = delta - self.fixangle;
