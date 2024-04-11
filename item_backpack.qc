@@ -273,30 +273,8 @@ void() DropBackpack =
 
 		if (weap == WPN_AXE)
 			item.netname = string_null;
-		else if (weap == WPN_SHOTGUN)
-			item.netname = "Shotgun";
-		else if (weap == WPN_SUPER_SHOTGUN)
-			item.netname = "Double-Barrelled Shotgun";
-		else if (weap == WPN_NAILGUN)
-			item.netname = "Nailgun";
-		else if (weap == WPN_SUPER_NAILGUN)
-			item.netname = "Perforator";
-		else if (weap == WPN_GRENADE_LAUNCHER)
-			item.netname = "Grenade Launcher";
-		else if (weap == WPN_ROCKET_LAUNCHER)
-			item.netname = "Rocket Launcher";
-		else if (weap == WPN_LIGHTNING)
-			item.netname = "Thunderbolt";
-#ifdef HIPNOTIC
-		else if (weap == WPN_LASER_CANNON)
-			item.netname = "Laser Cannon";
-		else if (weap == WPN_MJOLNIR)
-			item.netname = "Mjolnir";
-		else if (weap == WPN_PROXIMITY_GUN)
-			item.netname = "Proximity Gun";
-#endif
 		else
-			item.netname = string_null;
+			item.netname = weapon_strings[weap];
 		
 	}
 	

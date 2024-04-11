@@ -233,6 +233,24 @@ const float	WPN_CYCLE_END			= WPN_MJOLNIR;
 const float	WPN_CYCLE_END			= WPN_COUNT;
 #endif
 
+const string weapon_strings[] =
+{
+	"",
+	"Axe",
+	"Shotgun",
+	"Double-barreled Shotgun",
+	"Nailgun",
+	"Perforator",
+	"Grenade Launcher",
+	"Rocket Launcher",
+	"Thunderbolt",
+#ifdef HIPNOTIC
+	"Laser Cannon",
+	"Mjolnir",
+	"Proximity Gun",
+#endif
+};
+
 // point content values
 const float	CONTENT_EMPTY		= -1;
 const float	CONTENT_SOLID		= -2;

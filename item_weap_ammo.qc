@@ -119,6 +119,7 @@ StartWeapon
 */
 void() StartWeapon =
 {
+	self.netname = weapon_strings[self.weaponindex];
 	self.type = "weapon";
 	self.touch = weapon_touch;
 	setsize (self, '-16 -16 0', '16 16 56');
@@ -156,7 +157,6 @@ void() weapon_shotgun =
 	setmodel (self, "progs/g_shotgn.mdl");
 	self.weaponindex = WPN_SHOTGUN;
 	self.ammo_shells = 5;
-	self.netname = "Shotgun";
 	StartWeapon();
 }
 
@@ -181,7 +181,6 @@ void() weapon_supershotgun =
 	setmodel (self, "progs/g_shot.mdl");
 	self.weaponindex = WPN_SUPER_SHOTGUN;
 	self.ammo_shells = 10;
-	self.netname = "Double-barreled Shotgun";
 	StartWeapon();
 }
 
@@ -205,7 +204,6 @@ void() weapon_nailgun =
 	setmodel (self, "progs/g_nail.mdl");
 	self.weaponindex = WPN_NAILGUN;
 	self.ammo_nails = 30;
-	self.netname = "Nailgun";
 	StartWeapon();
 }
 
@@ -229,7 +227,6 @@ void() weapon_supernailgun =
 	setmodel (self, "progs/g_nail2.mdl");
 	self.weaponindex = WPN_SUPER_NAILGUN;
 	self.ammo_nails = 30;
-	self.netname = "Perforator";
 	StartWeapon();
 }
 
@@ -253,7 +250,6 @@ void() weapon_grenadelauncher =
 	setmodel (self, "progs/g_rock.mdl");
 	self.weaponindex = WPN_GRENADE_LAUNCHER;
 	self.ammo_rockets = 5;
-	self.netname = "Grenade Launcher";
 	StartWeapon();
 }
 
@@ -277,7 +273,6 @@ void() weapon_rocketlauncher =
 	setmodel (self, "progs/g_rock2.mdl");
 	self.weaponindex = WPN_ROCKET_LAUNCHER;
 	self.ammo_rockets = 5;
-	self.netname = "Rocket Launcher";
 	StartWeapon();
 }
 
@@ -302,7 +297,6 @@ void() weapon_lightning =
 	setmodel (self, "progs/g_light.mdl");
 	self.weaponindex = WPN_LIGHTNING;
 	self.ammo_cells = 12;
-	self.netname = "Thunderbolt";
 	StartWeapon();
 }
 
@@ -324,8 +318,8 @@ void() weapon_axe =
 	precache_model_safe ("progs/g_axe.mdl");
 	setmodel (self, "progs/g_axe.mdl");
 	self.weaponindex = WPN_AXE;
-	self.netname = "Axe. Find some wood!";
 	StartWeapon();
+	self.netname = "Axe. Find some wood!";
 }
 
 #ifdef HIPNOTIC
@@ -350,7 +344,6 @@ void () weapon_mjolnir =
 	setmodel (self, "progs/g_hammer.mdl");
 	self.weaponindex = WPN_MJOLNIR;
 	self.ammo_cells = 30;
-	self.netname = "Mjolnir";
 	StartWeapon ();
 }
 
@@ -374,7 +367,6 @@ void () weapon_laser_gun =
 	setmodel (self, "progs/g_laserg.mdl");
 	self.weaponindex = WPN_LASER_CANNON;
 	self.ammo_cells = 30;
-	self.netname = "Laser Cannon";
 	StartWeapon ();
 }
 
@@ -398,7 +390,6 @@ void () weapon_proximity_gun =
 	setmodel (self, "progs/g_prox.mdl");
 	self.weaponindex = WPN_PROXIMITY_GUN;
 	self.ammo_rockets = 6;
-	self.netname = "Proximity Gun";
 	StartWeapon ();
 }
 
