@@ -54,7 +54,7 @@ static void () footfall =
 {
 	if (self.buddy != world)
 	{
-		setorigin (self.buddy, self.origin + [0, 0, self.absmin_z]);
+		setorigin (self.buddy, self.origin + [0, 0, self.mins_z]);
 		SUB_CallAsSelf (screenshake_use, self.buddy);
 	}
 
@@ -423,7 +423,7 @@ static void () armagon_repulse_attack =
 	else if (self.state == 1)
 	{
 		// look in our immediate vicinity
-		org = self.origin + [0, 0, self.absmin_z];
+		org = self.origin + [0, 0, self.mins_z];
 
 		for (e = findradius (org, 300); e != world; e = e.chain)
 		{
