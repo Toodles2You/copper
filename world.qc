@@ -230,6 +230,18 @@ void() worldspawn =
 	// learn to map petersen i hate u
 	if (mapname == "e4m5") sandyMadeThis = TRUE;
 	
+#ifdef HIPNOTIC
+	// backwards compatibility for scourge of armagon levels
+	if (mapname == "hip1m1"
+	 || mapname == "hip1m2"
+	 || mapname == "hip1m3"
+	 || mapname == "hip1m4"
+	 || mapname == "hip1m5")
+		enforcersDropCells = TRUE;
+	else
+		enforcersDropCells = FALSE;
+#endif
+	
 	// make sure these are set for spawnfuncs, which happen before the first startframe()
 	teamplay = cvar("teamplay");
 	skill = cvar("skill");

@@ -37,6 +37,17 @@ $frame paind1 paind2 paind3 paind4 paind5 paind6 paind7 paind8
 $frame paind9 paind10 paind11 paind12 paind13 paind14 paind15 paind16
 $frame paind17 paind18 paind19
 
+#ifdef HIPNOTIC
+static void () enforcer_drop_ammo =
+{
+	if (enforcersDropCells)
+	{
+		self.ammo_cells = 5;
+		DropBackpack();
+	}
+}
+#endif
+
 vector() enforcer_muzzle_org =
 {
 	vector vec, right;
@@ -265,8 +276,9 @@ void()	enf_die1	=[	$death1,	enf_die2	] {}
 void()	enf_die2	=[	$death2,	enf_die3	] {}
 void()	enf_die3	=[	$death3,	enf_die4	] {
 	self.solid = SOLID_NOT;
-	//self.ammo_cells = 5;
-	//DropBackpack();
+#ifdef HIPNOTIC
+	enforcer_drop_ammo ();
+#endif
 }
 void()	enf_die4	=[	$death4,	enf_die5	] {ai_forward(14);}
 void()	enf_die5	=[	$death5,	enf_die6	] {ai_forward(2);}
@@ -284,8 +296,9 @@ void()	enf_fdie1	=[	$fdeath1,	enf_fdie2	] {}
 void()	enf_fdie2	=[	$fdeath2,	enf_fdie3	] {}
 void()	enf_fdie3	=[	$fdeath3,	enf_fdie4	] {
 	self.solid = SOLID_NOT;
-	//self.ammo_cells = 5;
-	//DropBackpack();
+#ifdef HIPNOTIC
+	enforcer_drop_ammo ();
+#endif
 }
 void()	enf_fdie4	=[	$fdeath4,	enf_fdie5	] {}
 void()	enf_fdie5	=[	$fdeath5,	enf_fdie6	] {}
@@ -303,6 +316,9 @@ void() enf_die =
 	if (self.health < -35)
 	{
 		Gib ("progs/h_mega.mdl", self.health);
+#ifdef HIPNOTIC
+		enforcer_drop_ammo ();
+#endif
 		return;
 	}
 
