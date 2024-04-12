@@ -278,10 +278,21 @@ const float	STATE_DOWN			= 3;
 const float	STATE_OFF			= 0;
 const float	STATE_ON			= 1;
 
+const float	STATE_ACTIVE		= 0;
+const float	STATE_INACTIVE		= 1;
+const float	STATE_SPEEDINGUP	= 2;
+const float	STATE_SLOWINGDOWN	= 3;
+
 const float	STATE_CLOSED		= 4;
 const float	STATE_OPEN			= 5;
 const float	STATE_OPENING		= 6;
 const float	STATE_CLOSING		= 7;
+
+const float	STATE_WAIT			= 0;
+const float	STATE_MOVE			= 1;
+const float	STATE_STOP			= 2;
+const float	STATE_FIND			= 3;
+const float	STATE_NEXT			= 4;
 
 
 

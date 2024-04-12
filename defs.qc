@@ -370,6 +370,9 @@ float enforcersDropCells; // backwards compatibility for scourge of armagon leve
 .float t_length = length;	// preserve old func_door_secret maphacks
 .float t_width = width;
 
+// rotating
+.vector rotate;
+
 
 .float		touch_time;
 .float		lip;			
@@ -420,11 +423,13 @@ float enforcersDropCells; // backwards compatibility for scourge of armagon leve
 .string model3 = map;
 .entity lastvictim = buddy;
 .float duration = length;
-.float endtime = length;
-.vector rotate = finaldest;
+.float endtime = width;
 .string group = wad;
 .float rotate_type = jump_flag;
 .vector neworigin = fog_color;
+.string path = map;
+.vector finalangle = dest;
+.string event = target2;
 
 
 //===========================================================================
