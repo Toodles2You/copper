@@ -192,6 +192,7 @@ static void () armagon_walk =
 	if (!ai_check_liquid ())
 		return;
 
+	nmfast ();
 	movetogoalplus (14);
 	armagon_walkthink ();
 }
@@ -215,6 +216,7 @@ static void () armagon_run =
 {
 	// this seems unnecessary
 	// RUN_STRAIGHT = 1;
+	nmfast ();
 	ai_run (14);
 	armagon_think ();
 }
@@ -261,7 +263,7 @@ void() armagon_run12 = [$lwalk12, armagon_run1] {armagon_run (); armagon_post_ru
 
 //============================================================================
 
-static void (float ofs, float turn, float laser) armagon_launch_projectile =
+static void (float ofs, float turn, float volley, float laser) armagon_launch_projectile =
 {
 	vector src, vec, targ, ang;
 	entity missile;
@@ -308,37 +310,48 @@ static void (float ofs, float turn, float laser) armagon_launch_projectile =
 
 //============================================================================
 
-void() armagon_watk1 = [$lw0fir1, armagon_watk2] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk2 = [$lw0fir2, armagon_watk3] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk3 = [$lw0fir3, armagon_watk4] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk4 = [$lw0fir4, armagon_watk5] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk5 = [$lw0fir5, armagon_watk6] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk6 = [$lw0fir6, armagon_watk7] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (40, 0, FALSE);}
-void() armagon_watk7 = [$lw0fir7, armagon_watk8] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk8 = [$lw0fir8, armagon_watk9] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk9 = [$lw0fir9, armagon_watk10] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk10 = [$lw0fir10, armagon_watk11] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_watk11 = [$lw0fir11, armagon_watk13] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (-40, 0, FALSE);}
-void() armagon_watk13 = [$lw0fir12, armagon_run1] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); ai_attack_finished (1.0);}
+static void () armagon_watk =
+{
+	if (!ai_check_liquid ())
+		return;
+
+	nmfast ();
+	ai_face ();
+	walkmove (self.angles_y, 14);
+	armagon_think ();
+}
+
+void() armagon_watk1 = [$lw0fir1, armagon_watk2] {armagon_watk ();}
+void() armagon_watk2 = [$lw0fir2, armagon_watk3] {servo (); armagon_watk ();}
+void() armagon_watk3 = [$lw0fir3, armagon_watk4] {armagon_watk ();}
+void() armagon_watk4 = [$lw0fir4, armagon_watk5] {footfall (); armagon_watk ();}
+void() armagon_watk5 = [$lw0fir5, armagon_watk6] {armagon_watk ();}
+void() armagon_watk6 = [$lw0fir6, armagon_watk7] {armagon_watk ();  armagon_launch_projectile (40, 0, FALSE, FALSE);}
+void() armagon_watk7 = [$lw0fir7, armagon_watk8] {armagon_watk ();}
+void() armagon_watk8 = [$lw0fir8, armagon_watk9] {servo (); armagon_watk ();}
+void() armagon_watk9 = [$lw0fir9, armagon_watk10] {armagon_watk ();}
+void() armagon_watk10 = [$lw0fir10, armagon_watk11] {footfall (); armagon_watk ();}
+void() armagon_watk11 = [$lw0fir11, armagon_watk13] {armagon_watk ();  armagon_launch_projectile (-40, 0, FALSE, FALSE);}
+void() armagon_watk13 = [$lw0fir12, armagon_run1] {armagon_watk ();  ai_attack_finished (1.0);}
 
 //============================================================================
 
-void() armagon_wlaseratk1 = [$lw0fir1, armagon_wlaseratk2] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk2 = [$lw0fir2, armagon_wlaseratk3] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk3 = [$lw0fir3, armagon_wlaseratk4] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk4 = [$lw0fir4, armagon_wlaseratk5] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk5 = [$lw0fir5, armagon_wlaseratk6] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk6 = [$lw0fir6, armagon_wlaseratk7] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (40, 0, TRUE);}
-void() armagon_wlaseratk7 = [$lw0fir7, armagon_wlaseratk8] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk8 = [$lw0fir8, armagon_wlaseratk9] {servo (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk9 = [$lw0fir9, armagon_wlaseratk10] {ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk10 = [$lw0fir10, armagon_wlaseratk11] {footfall (); ai_face (); walkmove (self.angles_y, 14); armagon_think ();}
-void() armagon_wlaseratk11 = [$lw0fir11, armagon_wlaseratk13] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_wlaseratk13 = [$lw0fir12, armagon_run1] {ai_face (); walkmove (self.angles_y, 14); armagon_think (); ai_attack_finished (1.0);}
+void() armagon_wlaseratk1 = [$lw0fir1, armagon_wlaseratk2] {armagon_watk ();}
+void() armagon_wlaseratk2 = [$lw0fir2, armagon_wlaseratk3] {servo (); armagon_watk ();}
+void() armagon_wlaseratk3 = [$lw0fir3, armagon_wlaseratk4] {armagon_watk ();}
+void() armagon_wlaseratk4 = [$lw0fir4, armagon_wlaseratk5] {footfall (); armagon_watk ();}
+void() armagon_wlaseratk5 = [$lw0fir5, armagon_wlaseratk6] {armagon_watk ();}
+void() armagon_wlaseratk6 = [$lw0fir6, armagon_wlaseratk7] {armagon_watk ();  armagon_launch_projectile (40, 0, FALSE, TRUE);}
+void() armagon_wlaseratk7 = [$lw0fir7, armagon_wlaseratk8] {armagon_watk ();}
+void() armagon_wlaseratk8 = [$lw0fir8, armagon_wlaseratk9] {servo (); armagon_watk ();}
+void() armagon_wlaseratk9 = [$lw0fir9, armagon_wlaseratk10] {armagon_watk ();}
+void() armagon_wlaseratk10 = [$lw0fir10, armagon_wlaseratk11] {footfall (); armagon_watk ();}
+void() armagon_wlaseratk11 = [$lw0fir11, armagon_wlaseratk13] {armagon_watk ();  armagon_launch_projectile (-40, 0, FALSE, TRUE);}
+void() armagon_wlaseratk13 = [$lw0fir12, armagon_run1] {armagon_watk ();  ai_attack_finished (1.0);}
 
 //============================================================================
 
-static void (float ang, float ofs) armagon_overturn_think =
+static void (float ang, float ofs, float turn) armagon_overturn_think =
 {
 	float dir, delta, angdelta;
 
@@ -361,7 +374,7 @@ static void (float ang, float ofs) armagon_overturn_think =
 	}
 	else if (self.count == 1)
 	{
-		armagon_launch_projectile (ofs, 2, FALSE);
+		armagon_launch_projectile (ofs, turn, FALSE, FALSE);
 	}
 	else
 	{
@@ -373,36 +386,46 @@ static void (float ang, float ofs) armagon_overturn_think =
 
 //============================================================================
 
-void() armagon_overleft1 = [$lw1fir1, armagon_overleft2] {self.count = 0; armagon_overturn_think (-165, 40);}
-void() armagon_overleft2 = [$lw1fir2, armagon_overleft3] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft3 = [$lw1fir3, armagon_overleft4] {servo (); armagon_overturn_think (-165, 40);}
-void() armagon_overleft4 = [$lw1fir4, armagon_overleft5] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft5 = [$lw1fir5, armagon_overleft6] {footfall (); armagon_overturn_think (-165, 40);}
-void() armagon_overleft6 = [$lw1fir6, armagon_overleft7] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft7 = [$lw1fir7, armagon_overleft8] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft8 = [$lw1fir8, armagon_overleft9] {servo (); armagon_overturn_think (-165, 40);}
-void() armagon_overleft9 = [$lw1fir9, armagon_overleft10] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft10 = [$lw1fir10, armagon_overleft11] {footfall (); armagon_overturn_think (-165, 40);}
-void() armagon_overleft11 = [$lw1fir11, armagon_overleft12] {self.count = 1; armagon_overturn_think (-165, 40);}
-void() armagon_overleft12 = [$lw1fir12, armagon_overleft13] {self.count = 2; armagon_overturn_think (-165, 40);}
-void() armagon_overleft13 = [$lw1fir13, armagon_overleft14] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft14 = [$lw1fir14, armagon_overleft15] {armagon_overturn_think (-165, 40);}
-void() armagon_overleft15 = [$lw1fir15, armagon_run1] {armagon_overturn_think (-165, 40); ai_attack_finished (1.0);}
+static void () armagon_overleft =
+{
+	armagon_overturn_think (-165, 40, 1);
+}
+
+void() armagon_overleft1 = [$lw1fir1, armagon_overleft2] {self.count = 0; armagon_overleft ();}
+void() armagon_overleft2 = [$lw1fir2, armagon_overleft3] {armagon_overleft ();}
+void() armagon_overleft3 = [$lw1fir3, armagon_overleft4] {servo (); armagon_overleft ();}
+void() armagon_overleft4 = [$lw1fir4, armagon_overleft5] {armagon_overleft ();}
+void() armagon_overleft5 = [$lw1fir5, armagon_overleft6] {footfall (); armagon_overleft ();}
+void() armagon_overleft6 = [$lw1fir6, armagon_overleft7] {armagon_overleft ();}
+void() armagon_overleft7 = [$lw1fir7, armagon_overleft8] {armagon_overleft ();}
+void() armagon_overleft8 = [$lw1fir8, armagon_overleft9] {servo (); armagon_overleft ();}
+void() armagon_overleft9 = [$lw1fir9, armagon_overleft10] {armagon_overleft ();}
+void() armagon_overleft10 = [$lw1fir10, armagon_overleft11] {footfall (); armagon_overleft ();}
+void() armagon_overleft11 = [$lw1fir11, armagon_overleft12] {self.count = 1; armagon_overleft ();}
+void() armagon_overleft12 = [$lw1fir12, armagon_overleft13] {self.count = 2; armagon_overleft ();}
+void() armagon_overleft13 = [$lw1fir13, armagon_overleft14] {armagon_overleft ();}
+void() armagon_overleft14 = [$lw1fir14, armagon_overleft15] {armagon_overleft ();}
+void() armagon_overleft15 = [$lw1fir15, armagon_run1] {armagon_overleft (); ai_attack_finished (1.0);}
 
 //============================================================================
 
-void() armagon_overright1 = [$lw2fir1, armagon_overright2] {self.count = 0; armagon_overturn_think (165, -40);}
-void() armagon_overright2 = [$lw2fir2, armagon_overright3] {armagon_overturn_think (165, -40);}
-void() armagon_overright3 = [$lw2fir3, armagon_overright4] {servo (); armagon_overturn_think (165, -40);}
-void() armagon_overright4 = [$lw2fir4, armagon_overright5] {armagon_overturn_think (165, -40);}
-void() armagon_overright5 = [$lw2fir5, armagon_overright6] {footfall (); self.count = 1; armagon_overturn_think (165, -40);}
-void() armagon_overright6 = [$lw2fir6, armagon_overright7] {self.count = 2; armagon_overturn_think (165, -40);}
-void() armagon_overright7 = [$lw2fir7, armagon_overright8] {armagon_overturn_think (165, -40);}
-void() armagon_overright8 = [$lw2fir8, armagon_overright9] {servo (); armagon_overturn_think (165, -40);}
-void() armagon_overright9 = [$lw2fir9, armagon_overright10] {armagon_overturn_think (165, -40);}
-void() armagon_overright10 = [$lw2fir10, armagon_overright11] {footfall (); armagon_overturn_think (165, -40);}
-void() armagon_overright11 = [$lw2fir11, armagon_overright12] {armagon_overturn_think (165, -40);}
-void() armagon_overright12 = [$lw2fir12, armagon_run1] {armagon_overturn_think (165, -40); ai_attack_finished (1.0);}
+static void () armagon_overright =
+{
+	armagon_overturn_think (165, -40, 2);
+}
+
+void() armagon_overright1 = [$lw2fir1, armagon_overright2] {self.count = 0; armagon_overright ();}
+void() armagon_overright2 = [$lw2fir2, armagon_overright3] {armagon_overright ();}
+void() armagon_overright3 = [$lw2fir3, armagon_overright4] {servo (); armagon_overright ();}
+void() armagon_overright4 = [$lw2fir4, armagon_overright5] {armagon_overright ();}
+void() armagon_overright5 = [$lw2fir5, armagon_overright6] {footfall (); self.count = 1; armagon_overright ();}
+void() armagon_overright6 = [$lw2fir6, armagon_overright7] {self.count = 2; armagon_overright ();}
+void() armagon_overright7 = [$lw2fir7, armagon_overright8] {armagon_overright ();}
+void() armagon_overright8 = [$lw2fir8, armagon_overright9] {servo (); armagon_overright ();}
+void() armagon_overright9 = [$lw2fir9, armagon_overright10] {armagon_overright ();}
+void() armagon_overright10 = [$lw2fir10, armagon_overright11] {footfall (); armagon_overright ();}
+void() armagon_overright11 = [$lw2fir11, armagon_overright12] {armagon_overright ();}
+void() armagon_overright12 = [$lw2fir12, armagon_run1] {armagon_overright (); ai_attack_finished (1.0);}
 
 //============================================================================
 
@@ -491,11 +514,11 @@ void() armagon_satk5 = [$lsfire5, armagon_satk6] {armagon_think ();}
 void() armagon_satk6 = [$lsfire6, armagon_satk7] {footfall (); armagon_think ();}
 void() armagon_satk7 = [$lsfire7, armagon_satk8] {armagon_think ();}
 void() armagon_satk8 = [$lsfire8, armagon_satk9] {armagon_think ();}
-void() armagon_satk9 = [$lsfire9, armagon_satk10] {armagon_think (); armagon_launch_projectile (40, 0, FALSE); armagon_launch_projectile (-40, 0, FALSE);}
+void() armagon_satk9 = [$lsfire9, armagon_satk10] {armagon_think (); armagon_launch_projectile (40, 0, TRUE, FALSE); armagon_launch_projectile (-40, 0, TRUE, FALSE);}
 void() armagon_satk10 = [$lsfire10, armagon_satk11] {armagon_think ();}
-void() armagon_satk11 = [$lsfire9, armagon_satk12] {armagon_think (); armagon_launch_projectile (40, 0, FALSE); armagon_launch_projectile (-40, 0, FALSE);}
+void() armagon_satk11 = [$lsfire9, armagon_satk12] {armagon_think (); armagon_launch_projectile (40, 0, TRUE, FALSE); armagon_launch_projectile (-40, 0, TRUE, FALSE);}
 void() armagon_satk12 = [$lsfire10, armagon_satk13] {armagon_think ();}
-void() armagon_satk13 = [$lsfire9, armagon_satk14] {armagon_think (); armagon_launch_projectile (40, 0, FALSE); armagon_launch_projectile (-40, 0, FALSE);}
+void() armagon_satk13 = [$lsfire9, armagon_satk14] {armagon_think (); armagon_launch_projectile (40, 0, TRUE, FALSE); armagon_launch_projectile (-40, 0, TRUE, FALSE);}
 void() armagon_satk14 = [$lsfire10, armagon_satk15] {armagon_think ();}
 void() armagon_satk15 = [$lsfire11, armagon_satk16] {armagon_think ();}
 void() armagon_satk16 = [$lsfire12, armagon_plant1] {armagon_think (); ai_attack_finished (0.3);}
@@ -510,16 +533,16 @@ void() armagon_slaser5 = [$lsfire5, armagon_slaser6] {armagon_think ();}
 void() armagon_slaser6 = [$lsfire6, armagon_slaser7] {footfall (); armagon_think ();}
 void() armagon_slaser7 = [$lsfire7, armagon_slaser8] {armagon_think ();}
 void() armagon_slaser8 = [$lsfire8, armagon_slaser9] {armagon_think ();}
-void() armagon_slaser9 = [$lsfire9, armagon_slaser10] {armagon_think (); armagon_launch_projectile (40, 0, TRUE); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_slaser10 = [$lsfire10, armagon_slaser11] {armagon_think ();}
-void() armagon_slaser11 = [$lsfire9, armagon_slaser12] {armagon_think (); armagon_launch_projectile (40, 0, TRUE); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_slaser12 = [$lsfire10, armagon_slaser13] {armagon_think ();}
-void() armagon_slaser13 = [$lsfire9, armagon_slaser14] {armagon_think (); armagon_launch_projectile (40, 0, TRUE); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_slaser14 = [$lsfire10, armagon_slaser15] {armagon_think ();}
-void() armagon_slaser15 = [$lsfire9, armagon_slaser16] {armagon_think (); armagon_launch_projectile (40, 0, TRUE); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_slaser16 = [$lsfire10, armagon_slaser17] {armagon_think ();}
-void() armagon_slaser17 = [$lsfire9, armagon_slaser18] {armagon_think (); armagon_launch_projectile (40, 0, TRUE); armagon_launch_projectile (-40, 0, TRUE);}
-void() armagon_slaser18 = [$lsfire10, armagon_slaser19] {armagon_think ();}
+void() armagon_slaser9 = [$lsfire9, armagon_slaser10] {nmfast (); armagon_think (); armagon_launch_projectile (40, 0, TRUE, TRUE); armagon_launch_projectile (-40, 0, TRUE, TRUE);}
+void() armagon_slaser10 = [$lsfire10, armagon_slaser11] {nmfast (); armagon_think ();}
+void() armagon_slaser11 = [$lsfire9, armagon_slaser12] {nmfast (); armagon_think (); armagon_launch_projectile (40, 0, TRUE, TRUE); armagon_launch_projectile (-40, 0, TRUE, TRUE);}
+void() armagon_slaser12 = [$lsfire10, armagon_slaser13] {nmfast (); armagon_think ();}
+void() armagon_slaser13 = [$lsfire9, armagon_slaser14] {nmfast (); armagon_think (); armagon_launch_projectile (40, 0, TRUE, TRUE); armagon_launch_projectile (-40, 0, TRUE, TRUE);}
+void() armagon_slaser14 = [$lsfire10, armagon_slaser15] {nmfast (); armagon_think ();}
+void() armagon_slaser15 = [$lsfire9, armagon_slaser16] {nmfast (); armagon_think (); armagon_launch_projectile (40, 0, TRUE, TRUE); armagon_launch_projectile (-40, 0, TRUE, TRUE);}
+void() armagon_slaser16 = [$lsfire10, armagon_slaser17] {nmfast (); armagon_think ();}
+void() armagon_slaser17 = [$lsfire9, armagon_slaser18] {nmfast (); armagon_think (); armagon_launch_projectile (40, 0, TRUE, TRUE); armagon_launch_projectile (-40, 0, TRUE, TRUE);}
+void() armagon_slaser18 = [$lsfire10, armagon_slaser19] {nmfast (); armagon_think ();}
 void() armagon_slaser19 = [$lsfire11, armagon_slaser20] {armagon_think ();}
 void() armagon_slaser20 = [$lsfire12, armagon_plant1] {armagon_think (); ai_attack_finished (0.3);}
 
@@ -742,6 +765,8 @@ static void () monster_armagon_spawn =
 
 	if (self.deathtype == string_null)
 		self.deathtype = "was outgunned by Armagon";
+
+	nmspeed (0.08);
 
 	walkmonster_start ();
 }
