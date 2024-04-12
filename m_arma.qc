@@ -265,7 +265,7 @@ void() armagon_run12 = [$lwalk12, armagon_run1] {armagon_run (); armagon_post_ru
 
 static void (float ofs, float turn, float volley, float laser) armagon_launch_projectile =
 {
-	vector src, vec, targ, ang;
+	vector src, vec, targ, ang, vel;
 	entity missile;
 	float dist;
 	float spd = 1000;
@@ -282,8 +282,22 @@ static void (float ofs, float turn, float volley, float laser) armagon_launch_pr
 	targ = self.enemy.origin + self.enemy.view_ofs;
 	if (skill != 0)
 	{
+		vel = self.enemy.velocity;
+
+		if (!volley && skill >= 2)
+		{
+			// shoot at the floor
+			targ_z = self.origin_z + self.mins_z;
+
+			// shoot at the center of mass
+			if (laser)
+				targ_z += (self.enemy.maxs_z - self.enemy.mins_z) / 2;
+
+			vel_z = 0;
+		}
+
 		dist = vlen (targ - src);
-		targ = targ + (self.enemy.velocity * (dist / spd));
+		targ = targ + (vel * (dist / spd));
 	}
 
 	vec = (targ - src);
