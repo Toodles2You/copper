@@ -416,6 +416,11 @@ float sandyMadeThis; // for special-casing SOMEBODY's stale keyvalues and clumsy
 .string model3 = map;
 .entity lastvictim = buddy;
 .float duration = length;
+.float endtime = length;
+.vector rotate = finaldest;
+.string group = wad;
+.float rotate_type = jump_flag;
+.vector neworigin = fog_color;
 
 
 //===========================================================================

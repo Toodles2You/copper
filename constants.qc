@@ -278,6 +278,11 @@ const float	STATE_DOWN			= 3;
 const float	STATE_OFF			= 0;
 const float	STATE_ON			= 1;
 
+const float	STATE_CLOSED		= 4;
+const float	STATE_OPEN			= 5;
+const float	STATE_OPENING		= 6;
+const float	STATE_CLOSING		= 7;
+
 
 
 const float	START_OFF			= 1;
@@ -294,6 +299,11 @@ const vector	VEC_HULL2_MAX	= '32 32 64';
 const vector	VEC_ONE			= '1 1 1';
 const vector	VEC_UP			= '0 0 1';
 const vector	VEC_DOWN 		= '0 0 -1';
+
+// rotate
+const float	OBJECT_ROTATE		= 0;
+const float	OBJECT_MOVEWALL		= 1;
+const float	OBJECT_SETORIGIN	= 2;
 
 // sound channels
 // channel 0 never willingly overrides

@@ -49,6 +49,7 @@ plats.qc
 lights.qc
 explobox.qc
 misc.qc
+rot.qc
 shooters.qc
 walls.qc
 sound.qc
