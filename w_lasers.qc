@@ -8,10 +8,49 @@ LASERS
 
 #ifdef HIPNOTIC
 
+// find a monster within a narrow cone relative to the direction of the laser & veer towards it
+static vector (vector dir) laser_ricochet =
+{
+	entity e;
+	vector ric, delta;
+	float head_dot, dot;
+
+	// default to normal velocity in-case no targets are found
+	ric = dir;
+
+	// very narrow cone
+	dot = 0.85;
+
+	for (e = findradius (self.origin, 1000); e != world; e = e.chain)
+	{
+		// must be a monster & not our owner
+		if (e == self || e == self.trueowner || !(e.flags & FL_MONSTER))
+			continue;
+		// must be alive & visible
+		if (!alive (e) || !visible (e))
+			continue;
+
+		// grab the direction to the target
+		delta = normalize (e.origin - self.origin);
+		// compare the direction to the normal velocity
+		head_dot = dir * delta;
+
+		// ensure the angle difference is the narrowest so far
+		if (head_dot > dot)
+		{
+			// found a target
+			head_dot = dot;
+			ric = delta;
+		}
+	}
+
+	return ric;
+}
+
 static void () laser_touch =
 {
 	vector spot1, spot2, oldvel;
-	float damage;
+	float damage, hurt;
 
 	if (other != self.trueowner && !CheckValidSpikeTouch()) return;
 
@@ -21,42 +60,43 @@ static void () laser_touch =
 	traceline (spot1, spot2, FALSE, self);
 	self.origin = trace_endpos;
 
+	hurt = FALSE;
+
 	if (other.takedamage)
 	{
 		damage = self.dmg;
 		
 		// why are you hitting yourself?
 		if (other == self.trueowner)
-		{
 			damage /= 2;
-		}
 
 		spawn_touchblood (damage);
 		T_Damage (other, self, self.trueowner, damage);
+
+		hurt = TRUE;
 	}
-	else
+
+	if (self.cnt > 0 && (!hurt || !(other.flags & (FL_MONSTER | FL_CLIENT))))
 	{
-		if (self.cnt > 0 && random () >= 0.15)
-		{
-			self.owner = self;
-			self.cnt--;
+		self.owner = self;
+		self.cnt--;
 
-			self.dmg *= 0.9;
+		// double damage with each ricochet
+		self.dmg *= 2;
 
-			// ricochet!
-			self.velocity = oldvel + (2 * trace_plane_normal);
-			self.velocity = normalize (self.velocity);
-			self.velocity = 1000 * self.velocity;
-			self.movedir = self.velocity;
+		// ricochet!
+		self.velocity = laser_ricochet (normalize (oldvel + 2 * trace_plane_normal));
+		self.velocity *= 1000;
+		self.movedir = self.velocity;
+		self.flags = not (self.flags, FL_ONGROUND);
 
-			self.flags = not (self.flags, FL_ONGROUND);
+		sound (self, CHAN_WEAPON, "hipweap/laserric.wav", 1, ATTN_STATIC);
 
-			sound (self, CHAN_WEAPON, "hipweap/laserric.wav", 1, ATTN_STATIC);
-			return;
-		}
-
-		gunshot (self.origin);
+		return;
 	}
+
+	if (!hurt)
+		gunshot (self.origin);
 
 	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 
@@ -138,13 +178,9 @@ void () W_FireLaser =
 		org = org + (ofs * v_up);
 
 		if (random () < 0.1)
-		{
-			launch_cannonlaser (org, dir, 25, TRUE);
-		}
+			launch_cannonlaser (org, dir, 18, TRUE);
 		else
-		{
 			launch_cannonlaser (org, dir, 18, FALSE);
-		}
 	}
 	else
 	{
@@ -152,10 +188,10 @@ void () W_FireLaser =
 		org = org - (aofs * v_up);
 
 		org = org + (aofs * v_right);
-		launch_cannonlaser (org, dir, 18, FALSE);
+		launch_cannonlaser (org, dir, 9, FALSE);
 
 		org = org - (2 * aofs * v_right);
-		launch_cannonlaser (org, dir, 18, FALSE);
+		launch_cannonlaser (org, dir, 9, FALSE);
 	}
 
 	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
