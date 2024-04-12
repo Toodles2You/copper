@@ -589,18 +589,20 @@ void Hud_DrawIBarPowerups(vector pos)
 {
 	if (stat_items & IT_SUIT)
 		Hud_DrawSuit(pos + '32 0');
+#ifdef HIPNOTIC
+	else if (stat_items2 & IT2_WETSUIT)
+		drawpic(pos + '32 0', "gfx/sb_wsuit", '16 16', '1 1 1', 1, 0);
+#endif
 	if (stat_items & IT_INVISIBILITY) 
 		Hud_DrawInvis(pos);
 	if (stat_items & IT_INVULNERABILITY)
 		Hud_DrawInvuln(pos + '16 0');
+#ifdef HIPNOTIC
+	else if (stat_items2 & IT2_EMPATHY_SHIELDS)
+		drawpic(pos + '16 0', "gfx/sb_eshld", '16 16', '1 1 1', 1, 0);
+#endif
 	if (stat_items & IT_QUAD)
 		Hud_DrawQuad(pos + '48 0');
-#ifdef HIPNOTIC
-	if (stat_items2 & IT2_WETSUIT)
-		drawpic(pos + '64 0', "gfx/sb_wsuit", '16 16', '1 1 1', 1, 0);
-	if (stat_items2 & IT2_EMPATHY_SHIELDS)
-		drawpic(pos + '80 0', "gfx/sb_eshld", '16 16', '1 1 1', 1, 0);
-#endif
 }
 
 void Hud_DrawIBar(vector pos)
