@@ -53,6 +53,7 @@ rot.qc
 shooters.qc
 walls.qc
 sound.qc
+spawn.qc
 
 fog.qc			// atmosfear
 t_void.qc		// bottomless pits

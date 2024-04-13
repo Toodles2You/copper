@@ -430,6 +430,11 @@ float enforcersDropCells; // backwards compatibility for scourge of armagon leve
 .string path = map;
 .vector finalangle = dest;
 .string event = target2;
+#ifdef HIPNOTIC
+.void() spawnfunction = think1;
+.float spawnmulti = multi_dmg;
+.float spawnsilent = volume;
+#endif
 
 
 //===========================================================================
