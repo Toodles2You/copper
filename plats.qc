@@ -1014,6 +1014,15 @@ void() func_train =
 	self.movedir = self.mins;
 }
 
+#ifdef HIPNOTIC
+void () func_train2 =
+{
+	self.spawnflags |= 1;
+	self.pausetime = zeroconvertdefault (self.pausetime, -1);
+	func_train ();
+}
+#endif
+
 /*QUAKED func_train_point (0 .5 .8) (-8 -8 -8) (8 8 8) PATH_SPEED
 Trains are moving platforms that players can ride.
 The targets origin specifies the min point of the train at each corner. The train spawns at the first target it is pointing at.
