@@ -67,7 +67,7 @@ static void () spikemine_Home =
 static void () spikemine_die =
 {
 	sound (self, CHAN_VOICE, "misc/null.wav", 1, ATTN_NORM);
-	T_RadiusDamage (self, self, 110, self);
+	T_RadiusDamage (self, self, 110, self, DMGTYPE_EXPLOSION);
 	BecomeExplosion ();
 }
 
@@ -89,22 +89,11 @@ static void () spike_mine_first_think =
 	self.use = monster_use;
 }
 
-/*QUAKED trap_spike_mine (0 .5 .8) (-16 -16 0) (16 16 32)
-*/
-void () trap_spike_mine =
+void () trap_spike_mine_spawn =
 {
-	if (!SUB_ShouldSpawn()) return;
-	if (deathmatch)
-	{
-		remove (self);
-		return;
-	}
-
-	precache_model ("progs/spikmine.mdl");
-	precache_sound ("hipitems/spikmine.wav");
+	self.classname = "trap_spike_mine";
 
 	setmodel (self, "progs/spikmine.mdl");
-	setsize (self, self.mins, self.maxs);
 
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_FLYMISSILE;
@@ -129,8 +118,33 @@ void () trap_spike_mine =
 
 	if (self.deathtype == string_null)
 		self.deathtype = "was blasted by a spike mine";
+}
+
+void() trap_spike_mine_spawner = {mon_spawner_use(trap_spike_mine_spawn);}
+
+/*QUAKED trap_spike_mine (0 .5 .8) (-16 -16 0) (16 16 32)
+*/
+void () trap_spike_mine =
+{
+	if (!SUB_ShouldSpawn()) return;
+	if (deathmatch)
+	{
+		remove (self);
+		return;
+	}
+
+	precache_model ("progs/spikmine.mdl");
+	precache_sound ("hipitems/spikmine.wav");
+
+	if (skill <= 1)
+		self.health = 200;
+	else
+		self.health = 400;
+
+	if ( monster_spawnsetup( trap_spike_mine_spawner ) ) return;
 
 	addmonster (1);
+	trap_spike_mine_spawn ();
 }
 
 #endif /* HIPNOTIC */
