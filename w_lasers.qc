@@ -156,6 +156,7 @@ W_FireLaser
 */
 void () W_FireLaser =
 {
+	entity spike1, spike2;
 	vector org, dir, v, out;
 	float ofs, aofs;
 
@@ -178,9 +179,9 @@ void () W_FireLaser =
 		org = org + (ofs * v_up);
 
 		if (random () < 0.1)
-			launch_cannonlaser (org, dir, 18, TRUE);
+			launch_cannonlaser (org, dir, 27, TRUE);
 		else
-			launch_cannonlaser (org, dir, 18, FALSE);
+			launch_cannonlaser (org, dir, 27, FALSE);
 	}
 	else
 	{
@@ -188,10 +189,13 @@ void () W_FireLaser =
 		org = org - (aofs * v_up);
 
 		org = org + (aofs * v_right);
-		launch_cannonlaser (org, dir, 9, FALSE);
+		spike1 = launch_cannonlaser (org, dir, 14, FALSE);
 
 		org = org - (2 * aofs * v_right);
-		launch_cannonlaser (org, dir, 9, FALSE);
+		spike2 = launch_cannonlaser (org, dir, 14, FALSE);
+
+		spike1.buddy = spike2;
+		spike2.buddy = spike1;
 	}
 
 	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
