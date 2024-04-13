@@ -80,5 +80,6 @@ m_oldone.qc		// registered
 m_arma.qc		// hipnotic
 m_grem.qc		// hipnotic
 m_scrge.qc		// hipnotic
+m_spike.qc		// hipnotic
 
 test.qc
