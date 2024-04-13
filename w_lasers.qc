@@ -50,7 +50,7 @@ static vector (vector dir) laser_ricochet =
 static void () laser_touch =
 {
 	vector spot1, spot2, oldvel;
-	float damage, hurt;
+	float damage, hurt, frac;
 
 	if (other != self.trueowner && !CheckValidSpikeTouch()) return;
 
@@ -64,7 +64,10 @@ static void () laser_touch =
 
 	if (other.takedamage)
 	{
-		damage = self.dmg;
+		// scale damage based on travel time
+		frac = 1.5 - clamp (self.attack_finished - time - 4.4, 0, 0.5) * 2;
+		// round to nearest whole number
+		damage = floor (self.dmg * frac + 0.5);
 		
 		// why are you hitting yourself?
 		if (other == self.trueowner)
@@ -81,11 +84,12 @@ static void () laser_touch =
 		self.owner = self;
 		self.cnt--;
 
-		// double damage with each ricochet
-		self.dmg *= 2;
-
 		// ricochet!
-		self.velocity = laser_ricochet (normalize (oldvel + 2 * trace_plane_normal));
+		self.velocity = normalize (oldvel + 2 * trace_plane_normal);
+
+		if (!deathmatch)
+			self.velocity = laser_ricochet (self.velocity);
+
 		self.velocity *= 1000;
 		self.movedir = self.velocity;
 		self.flags = not (self.flags, FL_ONGROUND);
