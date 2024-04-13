@@ -15,11 +15,11 @@ static vector (vector dir) laser_ricochet =
 	vector ric, delta;
 	float head_dot, dot;
 
-	// default to normal velocity in-case no targets are found
-	ric = dir;
-
 	// very narrow cone
 	dot = 0.85;
+	// default to normal velocity in-case no targets are found
+	ric = dir;
+	self.enemy = world;
 
 	for (e = findradius (self.origin, 1000); e != world; e = e.chain)
 	{
@@ -28,6 +28,9 @@ static vector (vector dir) laser_ricochet =
 			continue;
 		// must be alive & visible
 		if (!alive (e) || !visible (e))
+			continue;
+		// don't target the same enemy as our buddy if we already have an enemy
+		if (self.enemy && self.buddy && self.buddy.enemy == e)
 			continue;
 
 		// grab the direction to the target
@@ -41,6 +44,7 @@ static vector (vector dir) laser_ricochet =
 			// found a target
 			head_dot = dot;
 			ric = delta;
+			self.enemy = e;
 		}
 	}
 
