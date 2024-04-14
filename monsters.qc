@@ -303,7 +303,6 @@ entity( void() spawnthink ) mon_spawner_use =
 	if (horn_charmer != world)
 	{
 		mon.charmer = horn_charmer;
-		mon.effects |= EF_DIMLIGHT;
 	}
 	else
 #endif

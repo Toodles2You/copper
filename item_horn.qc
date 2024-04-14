@@ -106,6 +106,7 @@ float () FindCharmer =
 	float r;
 
 	self.effects |= EF_DIMLIGHT;
+	self.alpha = 0.5;
 
 	if (self.huntingcharmer > 0)
 	{

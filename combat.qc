@@ -29,6 +29,11 @@ void(entity targ, entity attacker, float dmgtype) Killed =
 	if (self.health < -99)
 		self.health = -99;		// don't let sbar look bad
 
+#ifdef HIPNOTIC
+	if (is_charmed (self))
+		self.alpha = 0;
+#endif
+
 	self.effects = not (self.effects, EF_DIMLIGHT);
 
 	if (self.movetype == MOVETYPE_PUSH || // doors, triggers, etc
