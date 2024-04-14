@@ -1,16 +1,6 @@
 
 #ifdef HIPNOTIC
 
-/*QUAKED func_spawn (0 .5 .8) (-32 -32 -24) (32 32 64) big/ambush megahealth
-This will spawn a thing upon being used. The thing that
-is spawned depends upon the value of "spawnfunction".
-"spawnclassname" should contain the same value as "spawnfunction".
-If "spawnfunction" is unspecified a random monster is chosen.
-The angles, target and all flags are passed on
-Think of it like setting up a normal entity.
-"spawnsilent" set this to 1 if you want a silent spawn.
-"spawnmulti" set this to 1 if you want this spawn to be reoccuring.
-*/
 void () func_spawn =
 {
 	float chance;
@@ -45,16 +35,6 @@ void () func_spawn =
 	self.spawnfunction ();
 }
 
-/*QUAKED func_spawn_small (0 .5 .8) (-16 -16 -24) (16 16 40) big/ambush megahealth
-This will spawn a thing upon being used. The thing that
-is spawned depends upon the value of "spawnfunction".
-"spawnclassname" should contain the same value as "spawnfunction".
-If "spawnfunction" is unspecified a random monster is chosen.
-The angles, target and all flags are passed on
-Think of it like setting up a normal entity.
-"spawnsilent" set this to 1 if you want a silent spawn.
-"spawnmulti" set this to 1 if you want this spawn to be reoccuring.
-*/
 void () func_spawn_small = func_spawn;
 
 #endif /* HIPNOTIC */
