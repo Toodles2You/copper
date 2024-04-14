@@ -446,7 +446,7 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 	}
 	
 #ifdef HIPNOTIC
-	//check for empathy shields
+	// check for empathy shields
 	if (has_empathy (targ) && !has_empathy (attacker) && targ != attacker)
 	{
 		damage = damage * 0.5;
@@ -454,7 +454,37 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 		// just play the freaking sound here why do you over-complicate everything hipnotic
 		sound (targ, CHAN_ITEM, "hipitems/empathy2.wav", 1, ATTN_NORM);
 	}
-#endif
+
+	// if the target is a charmed monster
+	if (is_charmed (targ))
+	{
+		if (is_charmed (attacker))
+		{
+			// ...and the attacker is, too, don't take any damage
+			if (targ.charmer == attacker.charmer)
+				return;
+		}
+		else
+		{
+			// ...being attacked by the charmer
+			if (attacker == targ.charmer)
+			{
+				// ignore it
+				if (!(targ.customflags & CFL_AXEHITME))
+					return;
+				// ...unless they're getting the axe
+				damage = max(damage, targ.health + 100);
+			}
+		}
+	}
+	// if the attacker is a charmed monster
+	else if (is_charmed (attacker))
+	{
+		// ...attacking its charmer, don't take any damage
+		if (targ == attacker.charmer)
+			return;
+	}
+#endif /* HIPNOTIC */
 	
 	// variety is the spice of life:
 	// scrags will happily fly down into slime, and they do spit green shit anyway
