@@ -124,7 +124,7 @@ void() monster_spawnsetup_go =
 		self.count = 1;
 	if (self.count == -1)
 		self.count = 0;
-	if (self.count != -4)
+	if (self.count > 0)
 		addmonster(self.count);	// this count gets added late
 };
 
@@ -310,6 +310,12 @@ entity( void() spawnthink ) mon_spawner_use =
 	else 
 	{
 		addmonster(1); // add them one at a time if this is an unlimited spawner
+#ifdef HIPNOTIC
+		if (self.count == -2)
+		{
+			SUB_Remove();
+		}
+#endif
 	}
 	
 #ifdef HIPNOTIC

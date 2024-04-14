@@ -35,6 +35,8 @@ void () func_spawn =
 
 	if (self.spawnmulti)
 		self.count = -1;
+	else
+		self.count = -2;
 
 	self.spawnflags |= SPAWN_TRIGGERED;
 	if (self.spawnsilent)
