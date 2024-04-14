@@ -28,53 +28,7 @@ $frame pain1 pain2 pain3 pain4 pain5
 
 $frame death1 death2 death3 death4 death5
 
-static float () ScourgeCheckAttack =
-{
-	float chance;
-
-	if (!CheckClearAttack ()) return FALSE;
-
-	if (enemy_range == RANGE_MELEE && z_overlap (self.enemy))
-	{
-		if (CanDamage (self.enemy, self.origin))
-		{
-			self.attack_state = AS_MELEE;
-			return TRUE;
-		}
-	}
-
-	if (time < self.attack_finished)
-		return FALSE;
-
-	if (!enemy_vis)
-		return FALSE;
-
-	// randomly attack with melee if enemy has the ring of shadows
-	if (has_invis (self.enemy))
-	{
-		if (random () < 0.2)
-		{
-			self.attack_state = AS_MELEE;
-			return TRUE;
-		}
-	}
-
-	chance = (self.enemy.origin_z + self.enemy.view_ofs_z) - (self.origin_z + self.view_ofs_z);
-	if (chance > 64)
-	   return FALSE;
-	else if (chance < -200)
-	   return FALSE;
-
-	if (time < self.attack_finished)
-		return FALSE;
-
-	if (enemy_range == RANGE_TOOFAR)
-		return FALSE;
-
-	self.attack_state = AS_MISSILE;
-	self.attack_finished = time + 2 + 2 * random ();
-	return TRUE;
-}
+//============================================================================
 
 //============================================================================
 
@@ -148,12 +102,13 @@ static void (float checkidle) scourge_scuttle =
 	if (checkidle && random () < 0.1)
 		sound (self, CHAN_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
 
-	sound (self, CHAN_BODY, "scourge/walk.wav", 1, ATTN_IDLE);
+	sound (self, CHAN_BODY, "scourge/walk.wav", 0.8, ATTN_IDLE);
 }
 
 static void () scourge_unscuttle =
 {
-	sound (self, CHAN_BODY, "misc/null.wav", 1, ATTN_IDLE);
+	sound (self, CHAN_VOICE, "misc/null.wav", 1, ATTN_NORM);
+	sound (self, CHAN_BODY, "misc/null.wav", 0.8, ATTN_IDLE);
 }
 
 //============================================================================
@@ -189,39 +144,42 @@ void() scourge_walk6 = [$walk6, scourge_walk1] {ai_walk (8);}
 void() scourge_run1 = [$walk1, scourge_run2]
 {
 	scourge_scuttle (TRUE);
+	nmfast ();
 	ai_run (18);
 }
-void() scourge_run2 = [$walk2, scourge_run3] {ai_run (14);}
-void() scourge_run3 = [$walk3, scourge_run4] {ai_run (14);}
-void() scourge_run4 = [$walk4, scourge_run5] {ai_run (14);}
-void() scourge_run5 = [$walk5, scourge_run6] {ai_run (14);}
-void() scourge_run6 = [$walk6, scourge_run1] {ai_run (14);}
+void() scourge_run2 = [$walk2, scourge_run3] {nmfast (); ai_run (14);}
+void() scourge_run3 = [$walk3, scourge_run4] {nmfast (); ai_run (14);}
+void() scourge_run4 = [$walk4, scourge_run5] {nmfast (); ai_run (14);}
+void() scourge_run5 = [$walk5, scourge_run6] {nmfast (); ai_run (14);}
+void() scourge_run6 = [$walk6, scourge_run1] {nmfast (); ai_run (14);}
 
 //============================================================================
 
 void() scourge_strafeleft1 = [$walk1, scourge_strafeleft2]
 {
 	scourge_scuttle (FALSE);
+	nmfast ();
 	ai_left (20);
 }
-void() scourge_strafeleft2 = [$walk2, scourge_strafeleft3] {ai_left (20);}
-void() scourge_strafeleft3 = [$walk3, scourge_strafeleft4] {ai_left (20);}
-void() scourge_strafeleft4 = [$walk4, scourge_strafeleft5] {ai_left (14);}
-void() scourge_strafeleft5 = [$walk5, scourge_strafeleft6] {ai_left (14);}
-void() scourge_strafeleft6 = [$walk6, scourge_run1] {ai_left (14);}
+void() scourge_strafeleft2 = [$walk2, scourge_strafeleft3] {nmfast (); ai_left (20);}
+void() scourge_strafeleft3 = [$walk3, scourge_strafeleft4] {nmfast (); ai_left (20);}
+void() scourge_strafeleft4 = [$walk4, scourge_strafeleft5] {nmfast (); ai_left (14);}
+void() scourge_strafeleft5 = [$walk5, scourge_strafeleft6] {nmfast (); ai_left (14);}
+void() scourge_strafeleft6 = [$walk6, scourge_run1] {nmfast (); ai_left (14);}
 
 //============================================================================
 
 void() scourge_straferight1 = [$walk1, scourge_straferight2]
 {
 	scourge_scuttle (FALSE);
+	nmfast ();
 	ai_right (20);
 }
-void() scourge_straferight2 = [$walk2, scourge_straferight3] {ai_right (20);}
-void() scourge_straferight3 = [$walk3, scourge_straferight4] {ai_right (20);}
-void() scourge_straferight4 = [$walk4, scourge_straferight5] {ai_right (14);}
-void() scourge_straferight5 = [$walk5, scourge_straferight6] {ai_right (14);}
-void() scourge_straferight6 = [$walk6, scourge_run1] {ai_right (14);}
+void() scourge_straferight2 = [$walk2, scourge_straferight3] {nmfast (); ai_right (20);}
+void() scourge_straferight3 = [$walk3, scourge_straferight4] {nmfast (); ai_right (20);}
+void() scourge_straferight4 = [$walk4, scourge_straferight5] {nmfast (); ai_right (14);}
+void() scourge_straferight5 = [$walk5, scourge_straferight6] {nmfast (); ai_right (14);}
+void() scourge_straferight6 = [$walk6, scourge_run1] {nmfast (); ai_right (14);}
 
 //============================================================================
 
@@ -310,7 +268,7 @@ static void () tail_whip =
 
 	delta = self.enemy.origin - self.origin;
 
-	if (vlen (delta) > 100)
+	if (vlen (delta) > 120)
 		return;
 
 	ldmg = (random () + random () + random ()) * 40;
@@ -321,25 +279,28 @@ static void () tail_whip =
 	SpawnMeatSpray (self.origin + v_forward * 16, crandom () * 50 * v_right);
 }
 
-void() scourge_melee1 = [$sting1, scourge_melee2] {scourge_unscuttle (); ai_charge (3);}
-void() scourge_melee2 = [$sting2, scourge_melee3] {ai_charge (3);}
-void() scourge_melee3 = [$sting3, scourge_melee4] {ai_charge (2);}
-void() scourge_melee4 = [$sting4, scourge_melee5] {ai_charge (2);}
+void() scourge_melee1 = [$sting1, scourge_melee2] {scourge_unscuttle (); nmfast (); ai_charge (3);}
+void() scourge_melee2 = [$sting2, scourge_melee3] {nmfast (); ai_charge (3);}
+void() scourge_melee3 = [$sting3, scourge_melee4] {nmfast (); ai_charge (2);}
+void() scourge_melee4 = [$sting4, scourge_melee5] {nmfast (); ai_charge (2);}
 void() scourge_melee5 = [$sting5, scourge_melee6]
 {
 	sound (self, CHAN_WEAPON, "scourge/tailswng.wav", 1, ATTN_NORM);
+	nmfast ();
 	ai_charge (3);
 }
-void() scourge_melee6 = [$sting6, scourge_melee7] {ai_charge (1);}
+void() scourge_melee6 = [$sting6, scourge_melee7] {nmfast (); ai_charge (1);}
 void() scourge_melee7 = [$sting7, scourge_melee8]
 {
+	nmfast ();
 	tail_whip ();
 }
-void() scourge_melee8 = [$sting8, scourge_melee9] {ai_face ();}
-void() scourge_melee9 = [$sting9, scourge_melee10] {ai_face ();}
-void() scourge_melee10 = [$sting10, scourge_melee11] {ai_face ();}
+void() scourge_melee8 = [$sting8, scourge_melee9] {nmfast (); ai_face ();}
+void() scourge_melee9 = [$sting9, scourge_melee10] {nmfast (); ai_face ();}
+void() scourge_melee10 = [$sting10, scourge_melee11] {nmfast (); ai_face ();}
 void() scourge_melee11 = [$sting11, scourge_run1]
 {
+	nmfast ();
 	ai_face ();
 	ai_check_refire (scourge_melee1);
 }
@@ -421,12 +382,14 @@ static void () monster_scourge_spawn =
 	self.th_die = scourge_die;
 	self.th_melee = scourge_melee;
 	self.th_missile = scourge_atk1;
-	self.th_checkattack = ScourgeCheckAttack;
+	self.th_checkattack = CheckAttack;
 	self.yaw_speed = 60;
 	self.trigger_field = scourge_spawn_field (self);
 
 	if (self.deathtype == string_null)
 		self.deathtype = "was stung by a Centroid";
+
+	nmspeed (0.075);
 
 	walkmonster_start ();
 }
