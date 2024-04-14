@@ -1670,8 +1670,12 @@ void(float dist) ai_run =
 #ifdef HIPNOTIC
 	if (is_charmed (self))
 	{
-		if (!alive (self.enemy) || self.enemy == self.charmer)
+		// if we haven't damaged our enemy in a while, give up
+		self.frags += 1;
+
+		if (!alive (self.enemy) || self.enemy == self.charmer || self.frags > 100)
 		{
+			self.frags = 0;
 			self.enemy = world;
 			HuntCharmer ();
 			return;
