@@ -315,15 +315,16 @@ entity( void() spawnthink ) mon_spawner_use =
 			SUB_Remove();
 		}
 	}
+#ifdef HIPNOTIC
+	else if (self.count == -2)
+	{
+		addmonster(1); // add them if this is a single-use func_spawn
+		SUB_Remove();
+	}
+#endif
 	else 
 	{
 		addmonster(1); // add them one at a time if this is an unlimited spawner
-#ifdef HIPNOTIC
-		if (self.count == -2)
-		{
-			SUB_Remove();
-		}
-#endif
 	}
 	
 	// eliminate unnecessary frame of delay

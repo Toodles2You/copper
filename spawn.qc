@@ -34,9 +34,9 @@ void () func_spawn =
 	// turn into a copper monster spawner
 
 	if (self.spawnmulti)
-		self.count = -1;
+		self.count = -1; // infinite spawner
 	else
-		self.count = -2;
+		self.count = -2; // single-use but, increment the monster total upon spawning
 
 	self.spawnflags |= SPAWN_TRIGGERED;
 	if (self.spawnsilent)
