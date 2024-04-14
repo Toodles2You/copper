@@ -392,8 +392,11 @@ void() zombie_paine12	=[	$paine12,	zombie_paine13	] {
 }
 void() zombie_paine13	=[	$paine13,	zombie_paine14	]{
 	self.health = 60;
-	if (zombie_forget(zombie_layidle, zombie_paine13))	// don't get up for infights
-		return;
+#ifdef HIPNOTIC
+	if (!is_charmed (self))
+#endif
+		if (zombie_forget(zombie_layidle, zombie_paine13))	// don't get up for infights
+			return;
 	zombie_try_stand(zombie_paine12);	// see if ok to stand up
 	self.think1 = zombie_run1;
 }
@@ -542,6 +545,9 @@ void() zombie_die =
 		GibSpray ("progs/h_zombie.mdl", self.health);
 	
 	if (skill != 3) return;
+#ifdef HIPNOTIC
+	if (is_charmed (self)) return;
+#endif
 	
 	// respawning zombie behavior:
 	if (self.customflags & CFL_RETURNED)
