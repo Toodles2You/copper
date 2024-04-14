@@ -299,6 +299,16 @@ entity( void() spawnthink ) mon_spawner_use =
 			mon.enemy = activator;
 	}	
 
+#ifdef HIPNOTIC
+	if (horn_charmer != world)
+	{
+		mon.charmer = horn_charmer;
+		mon.effects |= EF_DIMLIGHT;
+
+		addmonster(1); // add them one at a time if this is an unlimited spawner
+	}
+	else
+#endif
 	if (self.count > 0)
 	{
 		self.count = self.count - 1;
@@ -317,14 +327,6 @@ entity( void() spawnthink ) mon_spawner_use =
 		}
 #endif
 	}
-	
-#ifdef HIPNOTIC
-	if (horn_charmer != world)
-	{
-		mon.charmer = horn_charmer;
-		mon.effects |= EF_DIMLIGHT;
-	}
-#endif
 	
 	// eliminate unnecessary frame of delay
 	if (pause == 0)
