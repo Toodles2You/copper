@@ -480,6 +480,12 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 				// ...unless they're getting the axe
 				damage = max(damage, targ.health + 100);
 			}
+			else
+			{
+				// resistance for good boys
+				if (targ.classname == "monster_dog")
+					damage /= 4;
+			}
 		}
 	}
 	// if the attacker is a charmed monster
@@ -488,6 +494,10 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 		// ...attacking its charmer, don't take any damage
 		if (targ == attacker.charmer)
 			return;
+		
+		// extra damage for small monsters
+		if (attacker.classname == "monster_dog" || attacker.classname == "monster_zombie")
+			damage *= 3;
 	}
 #endif /* HIPNOTIC */
 	
@@ -511,8 +521,11 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 	
 	if (attacker.classname == targ.classname)
 	{
-		if (attacker.classname != "player" && attacker.classname != "monster_grunt")
-			damage = damage * 0.5;
+#ifdef HIPNOTIC
+		if (attacker.charmer == targ.charmer)
+#endif
+			if (attacker.classname != "player" && attacker.classname != "monster_grunt")
+				damage = damage * 0.5;
 	}
 
 	// .frags used on monsters to count time spent not damaging an enemy, so impossible infights time out
@@ -606,6 +619,10 @@ void(entity targ, entity inflictor, entity attacker, float damage, float dmgtype
 	// if (self.th_pain && time >= self.pain_finished)	// can't do this here, breaks zombie pain handling
 	if (self.th_pain)
 	{
+#ifdef HIPNOTIC
+		if (is_charmed (self)) return;
+#endif
+
 		// nightmare scaling of .pain_finished moved to PainFinished(), called from .th_pain
 		// on appropriate monsters only
 		self.th_pain (attacker, take);
