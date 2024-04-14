@@ -99,8 +99,14 @@ DelayThink
 void() DelayThink =
 {
 	activator = self.enemy;
+#ifdef HIPNOTIC
+	horn_charmer = self.charmer;
+#endif
 	SUB_PrintMessage();
 	SUB_UseTargetsGo();
+#ifdef HIPNOTIC
+	horn_charmer = world;
+#endif
 	remove(self);
 }
 
@@ -112,7 +118,13 @@ DelayThinkSilent
 void() DelayThinkSilent =
 {
 	activator = self.enemy;
+#ifdef HIPNOTIC
+	horn_charmer = self.charmer;
+#endif
 	SUB_UseTargetsGo();
+#ifdef HIPNOTIC
+	horn_charmer = world;
+#endif
 	remove(self);
 }
 
@@ -142,6 +154,9 @@ void( void() delayedthink ) SUB_UseTargetsDelay =
 	t.nextthink = time + self.delay;
 	t.think = delayedthink;
 	t.enemy = activator;
+#ifdef HIPNOTIC
+	t.charmer = horn_charmer;
+#endif
 	t.message = self.message;
 	t.noise = self.noise;
 	SUB_CopyTargets(t);
