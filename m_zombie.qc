@@ -465,6 +465,10 @@ void() zombie_getupw	=[	$paine13,	zombie_paine14	]{
 // pain_finished
 void(entity zom) zombie_knockdown =
 {
+#ifdef HIPNOTIC
+	if (zom.charmer == self) return;
+#endif
+
 	entity oself;
 	oself = self;
 	self = zom;
