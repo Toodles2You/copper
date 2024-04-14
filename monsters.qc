@@ -304,8 +304,6 @@ entity( void() spawnthink ) mon_spawner_use =
 	{
 		mon.charmer = horn_charmer;
 		mon.effects |= EF_DIMLIGHT;
-
-		addmonster(1); // add them one at a time if this is an unlimited spawner
 	}
 	else
 #endif

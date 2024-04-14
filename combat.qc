@@ -79,7 +79,10 @@ void(entity targ, entity attacker, float dmgtype) Killed =
 		if (self.flags & FL_SWIM)
 			self.flags = self.flags - FL_SWIM;
 
-		killed_monster();	// bump the monster counter
+#ifdef HIPNOTIC
+		if (!is_charmed (self))
+#endif
+			killed_monster();	// bump the monster counter
 		monster_death_use();
 	}
 	if (self.classname == "player")
