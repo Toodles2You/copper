@@ -109,6 +109,7 @@ const float DMGTYPE_SCRIPT			= 2048;	// target_items, invoke, etc
 
 const float	TRACE_NOMONSTERS		= 1;
 const float	TRACE_WATER				= 2;
+const float	TRACE_NOALLIES			= 4;
 
 // monsters
 const float	SPAWN_AMBUSH		= 1;

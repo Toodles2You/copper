@@ -28,7 +28,7 @@ static void (vector p1, vector p2, entity from, float damage) W_HammerDamage =
 
 	e1 = e2 = world;
 
-	traceline2 (p1, p2, self, 0);
+	traceline2 (p1, p2, self, TRACE_NOALLIES);
 
 	if (trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
@@ -42,7 +42,7 @@ static void (vector p1, vector p2, entity from, float damage) W_HammerDamage =
 	}
 	e1 = trace_ent;
 
-	traceline2 (p1 + f, p2 + f, self, 0);
+	traceline2 (p1 + f, p2 + f, self, TRACE_NOALLIES);
 
 	if (trace_ent != e1 && trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
@@ -51,7 +51,7 @@ static void (vector p1, vector p2, entity from, float damage) W_HammerDamage =
 	}
 	e2 = trace_ent;
 
-	traceline2 (p1 - f, p2 - f, self, 0);
+	traceline2 (p1 - f, p2 - f, self, TRACE_NOALLIES);
 
 	if (trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !has_wetsuit (trace_ent))
 	{
@@ -90,7 +90,7 @@ static void () W_LightningThink =
 		{
 			if (!(head.flags & FL_NOTARGET) && (head.flags & (FL_MONSTER | FL_CLIENT)))
 			{
-				if (visible (head) && head != self.owner.owner && head.health > 0)
+				if (visible (head) && head != self.owner.owner && head.health > 0 && !is_charmed (head))
 				{
 					head_dist = vlen (head.origin - self.buddy.origin);
 					if (head_dist < cur_dist && !(head.customflags & CFL_STRUCKBYMJOLNIR))
@@ -232,7 +232,7 @@ void (vector source) W_FireMjolnirLightning =
 		return;
 	}
 
-	traceline2 (source , source - v_up * 50, self, 0);
+	traceline2 (source , source - v_up * 50, self, TRACE_NOMONSTERS);
 	if (trace_ent == self)
 		return;	// some notrace shit happened
 	if (trace_fraction <= 0.3)

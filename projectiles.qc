@@ -69,7 +69,11 @@ void(vector start, vector end, entity ignore, float traceflags) traceline2 =
 				trace_ent == ignore || 					// always ignore the original ignore ent on future loops
 				trace_ent.movetype == MOVETYPE_NOCLIP || // don't shoot noclipping players
 				invis_miss_check(trace_ent, start, end - start) || 
-				trace_ent.notrace)						// flag to make things game-functionally nonsolid (monsterclip/etc)
+				trace_ent.notrace						// flag to make things game-functionally nonsolid (monsterclip/etc)
+#ifdef HIPNOTIC
+				|| ((traceflags & TRACE_NOALLIES) && allyship_check (self, trace_ent))
+#endif
+			)
 			{
 				// if two entities that are both to be ignored are touching, the trace will
 				// fail with a distance of zero once 'ig' changes, so nudge forward one unit
@@ -249,9 +253,13 @@ float() projectile_valid_passthru =
 		other.notrace  || 				// specially marked (monsterclip)
 		invis_miss_check(other,self.origin,self.velocity) || 
 		other.movetype == MOVETYPE_NOCLIP || // ignore noclipping players
-		other == self.trueowner	)		// still track the original owner - there are cases when monsters 
+		other == self.trueowner			// still track the original owner - there are cases when monsters 
 										// or players firing fat FLYMISSILE projectiles into an adjacent 
 										// monsterclip can be hit by them when the owner switches
+#ifdef HIPNOTIC
+		|| allyship_check (self, other)
+#endif
+		)
 		return TRUE;
 		
 	return FALSE;
@@ -326,6 +334,42 @@ float(entity tgt, vector start, vector dir) invis_miss_check =
 	float d = (start - tgt.origin) * p;
 	return (fabs(d) >= 10);
 }
+
+#ifdef HIPNOTIC
+
+// i'm fearful of infinite recursion
+static entity (entity e) who_be_charming2 =
+{
+	if (e.flags & FL_CLIENT)
+		return e;
+	if (e.flags & FL_MONSTER)
+		return e.charmer;
+	return world;
+}
+
+static entity (entity e) who_be_charming =
+{
+	if (e.flags & FL_CLIENT)
+		return e;
+	if (e.flags & FL_MONSTER)
+		return e.charmer;
+	if (e.trueowner != world)
+		return who_be_charming2 (e.trueowner);
+	return world;
+}
+
+float (entity me, entity tgt) allyship_check =
+{
+	entity meCharmer = who_be_charming (me);
+	entity tgtCharmer = who_be_charming (tgt);
+
+	if (meCharmer != tgtCharmer)
+		return FALSE;
+
+	return meCharmer != world;
+}
+
+#endif /* HIPNOTIC */
 
 
 

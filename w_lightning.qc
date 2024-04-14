@@ -39,7 +39,7 @@ void(vector start, entity from, float dmg) W_ChainLightning =
 			(head.movetype >= MOVETYPE_WALK && head.movetype <= MOVETYPE_FLY))
 		{
 			h_org = BoundsCenter(head);
-			traceline2(start, h_org, from, 0);
+			traceline2(start, h_org, from, TRACE_NOALLIES);
 			if (trace_ent == head)
 			{	
 				// rank by distance
@@ -94,7 +94,7 @@ void(vector start, vector limit, entity from, float damage) LightningBeam =
 		left = v_right * -12;
 	}
 
-	traceline2(start, limit, from, 0);
+	traceline2(start, limit, from, TRACE_NOALLIES);
 	end = trace_endpos;
 	if (trace_ent.takedamage && !(trace_ent.customflags & CFL_ZAPPED))
 	{
@@ -154,7 +154,7 @@ void(vector start, vector limit, entity from, float damage) LightningBeam =
 
 
 	damage *= 0.3;	// tone down the side prongs or the LG is a total scythe vs crowds
-	traceline2(start + left, end + left, from, 0);
+	traceline2(start + left, end + left, from, TRACE_NOALLIES);
 	if (trace_ent.takedamage && !(trace_ent.customflags & CFL_ZAPPED))	// don't add damage to any target twice
 	{
 		trace_ent.customflags |= CFL_ZAPPED;
@@ -162,7 +162,7 @@ void(vector start, vector limit, entity from, float damage) LightningBeam =
 		AddMultiDamage (trace_ent, damage);
 	}
 
-	traceline2(start - left, end - left, from, 0);
+	traceline2(start - left, end - left, from, TRACE_NOALLIES);
 	if (trace_ent.takedamage && !(trace_ent.customflags & CFL_ZAPPED))
 	{
 		trace_ent.customflags |= CFL_ZAPPED;
@@ -323,7 +323,7 @@ void() W_FireLightning =
 	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
 	org = self.origin + '0 0 16'+ v_forward * 8;
 	
-	traceline2(org, org + v_forward * 720, self, TRACE_NOMONSTERS);
+	traceline2(org, org + v_forward * 720, self, TRACE_NOMONSTERS | TRACE_NOALLIES);
 
 	ClearMultiDamage();
 	LightningBeam(org, trace_endpos + v_forward * 8, self, 30);

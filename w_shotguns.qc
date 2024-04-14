@@ -80,7 +80,7 @@ void(float shotcount, vector dir, vector spread) FireBullets =
 		// check for trace-through cases
 		for (ig = self; ig != world; lim++)	// ig == world if we hit a wall or hit nothing
 		{
-			traceline2(src, src + direction*2048, ig, 0);
+			traceline2(src, src + direction*2048, ig, TRACE_NOALLIES);
 			
 			if (trace_ent == self)
 				return;	// some notrace shit happened

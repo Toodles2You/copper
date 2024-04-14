@@ -26,6 +26,9 @@ static vector (vector dir) laser_ricochet =
 		// must be a monster & not our owner
 		if (e == self || e == self.trueowner || !(e.flags & FL_MONSTER))
 			continue;
+		// must not be a charmed monster
+		if (e.charmer != world && e.charmer == e.trueowner)
+			continue;
 		// must be alive & visible
 		if (!alive (e) || !visible (e))
 			continue;
@@ -61,7 +64,7 @@ static void () laser_touch =
 	oldvel = normalize (self.movedir);
 	spot1 = self.origin - (16 * oldvel);
 	spot2 = self.origin + (16 * oldvel);
-	traceline (spot1, spot2, FALSE, self);
+	traceline2 (spot1, spot2, self, TRACE_NOMONSTERS);
 	self.origin = trace_endpos;
 
 	hurt = FALSE;
