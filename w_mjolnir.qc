@@ -256,7 +256,7 @@ void (float lightning) W_FireMjolnir =
 
 	makevectors (self.v_angle);
 	source = self.origin + self.view_ofs;
-	traceline2 (source, source + v_forward * 64, self, 0); // was 32
+	traceline2 (source, source + v_forward * 64, self, TRACE_NOALLIES); // was 32
 	if (trace_ent == self)
 		return;	// some notrace shit happened
 	if (trace_fraction == 1.0)

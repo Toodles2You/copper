@@ -79,7 +79,7 @@ void() W_FireAxe =
 	
 	makevectors (self.v_angle);
 	source = self.origin + self.view_ofs;//'0 0 16';
-	traceline2(source, source + v_forward * (64), self, 0);
+	traceline2(source, source + v_forward * (64), self, TRACE_NOALLIES);
 	if (trace_ent == self)
 		return;	// some notrace shit happened
 	if (trace_fraction == 1.0) 

@@ -303,6 +303,7 @@ entity( void() spawnthink ) mon_spawner_use =
 	if (horn_charmer != world)
 	{
 		mon.charmer = horn_charmer;
+		mon.owner = horn_charmer; // toodles: this might be a bad idea
 	}
 	else
 #endif
