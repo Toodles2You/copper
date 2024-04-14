@@ -27,7 +27,7 @@ static vector (vector dir) laser_ricochet =
 		if (e == self || e == self.trueowner || !(e.flags & FL_MONSTER))
 			continue;
 		// must not be a charmed monster
-		if (e.charmer != world && e.charmer == e.trueowner)
+		if (e.charmer != world && e.charmer == self.trueowner)
 			continue;
 		// must be alive & visible
 		if (!alive (e) || !visible (e))
