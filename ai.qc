@@ -367,6 +367,11 @@ float() CheckClearAttack =
 {
 	vector spot1, spot2;
 	
+#ifdef HIPNOTIC
+	if (!ai_check_charmed (self.enemy))
+		return FALSE;
+#endif
+	
 	if (self.enemy.customflags & (CFL_PLUNGE|CFL_LIMBO) || self.enemy.deadflag == DEAD_SPECTATING)
 		return FALSE;
 		
@@ -611,6 +616,14 @@ void() FoundTarget =
 			return;
 		}
 	}
+
+#ifdef HIPNOTIC
+	if (!ai_check_charmed (self.enemy))
+	{
+		self.enemy = world;
+		return;
+	}
+#endif
 	
 	monster_alt_use(TRUE, FALSE, FALSE, FALSE);	// fire wake target if applicable
 
@@ -647,6 +660,10 @@ float(entity client) FilterTarget =
 		return FALSE;
 	if (range(client) == RANGE_TOOFAR)
 		return FALSE;
+#ifdef HIPNOTIC
+	if (!ai_check_charmed (client))
+		return FALSE;
+#endif
 		
 	return TRUE;
 }
@@ -668,6 +685,24 @@ float() FindTarget =
 {
 	local entity	client;
 	local float		r;
+
+#ifdef HIPNOTIC
+	if (is_charmed (self))
+	{
+		if (!FindCharmer ())
+			return FALSE;
+
+		client = FindTargetCharmed ();
+
+		if (client == world)
+			return FALSE;
+
+		// got one
+		self.enemy = client;
+		FoundTarget ();
+		return TRUE;
+	}
+#endif
 
 	//dprint("in findtarget\n");
 	// (spawnflags & 3) unhacked by lunaran since I actually want to use spawnflag 2 for something
@@ -1447,6 +1482,11 @@ void(float dist) ai_walk =
 		return;
 		
 	movetogoalplus(dist);	// wraps movetogoal
+
+#ifdef HIPNOTIC
+	if (is_charmed (self) && self.huntingcharmer != 0)
+		self.nextthink = time + (self.nextthink - time) / 2;
+#endif
 }
 
 
@@ -1627,6 +1667,18 @@ void(float dist) ai_run =
 	
 	entity e;
 	
+#ifdef HIPNOTIC
+	if (is_charmed (self))
+	{
+		if (!alive (self.enemy) || self.enemy == self.charmer)
+		{
+			self.enemy = world;
+			HuntCharmer ();
+			return;
+		}
+	}
+#endif
+
 	// if infighting and we haven't damaged our enemy in a while, give up
 	if (self.enemy.classname != "player" && self.oldenemy.classname == "player")
 	{
@@ -1679,7 +1731,10 @@ void(float dist) ai_run =
 	// look for other coop players
 	if (coop && self.search_time < time)
 	{
-		ReprioritizeEnemy();
+#ifdef HIPNOTIC
+		if (!is_charmed (self))
+#endif
+			ReprioritizeEnemy();
 		//if (ReprioritizeEnemy ())
 		//	return;
 	}

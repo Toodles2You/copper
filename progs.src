@@ -21,6 +21,7 @@ item_weap_ammo.qc
 item_powerups.qc
 item_keys_runes.qc
 item_backpack.qc
+item_horn.qc
 
 projectiles.qc
 weapons.qc

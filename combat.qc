@@ -29,6 +29,8 @@ void(entity targ, entity attacker, float dmgtype) Killed =
 	if (self.health < -99)
 		self.health = -99;		// don't let sbar look bad
 
+	self.effects = not (self.effects, EF_DIMLIGHT);
+
 	if (self.movetype == MOVETYPE_PUSH || // doors, triggers, etc
 		(self.movetype == MOVETYPE_NONE && self.classname != "player" && !(self.flags & FL_MONSTER))) 
 		// players are movetype none while hanging out in a void pit waiting to die
@@ -338,6 +340,11 @@ void( entity attacker ) T_ReactToDamage =
 	// don't get distracted instantly after switching targets
 	if (time < self.dmgtime) return;
 
+#ifdef HIPNOTIC
+	if (!ai_check_charmed (attacker))
+		return;
+#endif
+
 	if (attacker == self.enemy && (attacker.flags & FL_MONSTER))
 	{
 		self.frags = 0;	// .frags used on monsters as a 'give up on infighting' timer
@@ -370,7 +377,12 @@ void( entity attacker ) T_ReactToDamage =
 	// get mad unless of the same class (except for soldiers)
 	// classname check replaced with new "type" check
 	// .type defaults to classname anyway, or can be overwritten so monsters can be grouped into mutually not-infighting groups
-	if ( ( self.type != attacker.type ) || ( self.classname == "monster_army" ) )
+	if (self.type != attacker.type
+#ifdef HIPNOTIC
+	 || self.charmer != attacker.charmer
+	 || self.classname == "monster_armagon"
+#endif
+	 || self.classname == "monster_army")
 	{
 		if (self.enemy.classname == "player")
 			self.oldenemy = self.enemy;

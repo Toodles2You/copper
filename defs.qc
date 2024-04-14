@@ -316,6 +316,10 @@ float enforcersDropCells; // backwards compatibility for scourge of armagon leve
 .float		search_time;
 .float		attack_state;
 .float 		pausetime;
+#ifdef HIPNOTIC
+.entity		charmer;
+.float		huntingcharmer;
+#endif
 
 // player only fields
 .float		walkframe;

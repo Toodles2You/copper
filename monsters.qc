@@ -312,6 +312,14 @@ entity( void() spawnthink ) mon_spawner_use =
 		addmonster(1); // add them one at a time if this is an unlimited spawner
 	}
 	
+#ifdef HIPNOTIC
+	if (horn_charmer != world)
+	{
+		mon.charmer = horn_charmer;
+		mon.effects |= EF_DIMLIGHT;
+	}
+#endif
+	
 	// eliminate unnecessary frame of delay
 	if (pause == 0)
 		SUB_CallAsSelf(mon.think, mon);
