@@ -275,6 +275,57 @@ void() ambient_swamp2 =
 
 //============================================================================
 
+#ifdef HIPNOTIC
+
+// backwards compatibility for scourge of armagon levels
+// you really should use the copper ambient_sound instead
+
+void() ambient_humming =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/humming.wav";
+	ambient_setup(0.5);
+}
+
+void() ambient_rushing =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/rushing.wav";
+	ambient_setup(0.5);
+}
+
+void() ambient_running_water =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/runwater.wav";
+	ambient_setup(0.5);
+}
+
+void() ambient_fan_blowing =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/fanblow.wav";
+	ambient_setup(0.5);
+}
+
+void() ambient_waterfall =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/waterfal.wav";
+	ambient_setup(0.5);
+}
+
+void() ambient_riftpower =
+{
+	if (!SUB_ShouldSpawn()) return;
+	self.noise = "ambient/riftpowr.wav";
+	ambient_setup(0.5);
+}
+
+#endif /* HIPNOTIC */
+
+//============================================================================
+
 void(entity on, float _chan, string _noise, float _volume, float _distance, float _delay) sound_delayed =
 {
 	if (!_delay)
@@ -386,6 +437,10 @@ void() target_sound_use =
 		}
 		else
 		{
+#ifdef HIPNOTIC
+			if (self.spawnflags & 8) // stop looping
+				sound (self.buddy, self.style, "misc/null.wav", self.volume, self.distance);
+#endif
 			self.nextthink = 0;
 			self.buddy = world;
 		}
@@ -454,6 +509,64 @@ void() target_sound =
 	self.use = target_sound_use;
 	if ((self.style < 0) || (self.style > 7)) self.style = 0;
 }
+
+//============================================================================
+
+#ifdef HIPNOTIC
+
+void () play_sound_triggered =
+{
+	// convert to copper target_sound
+
+	if (self.spawnflags & 1)
+		self.spawnflags = not (self.spawnflags, 1) | 4 | 8;
+
+	self.distance = self.speed;
+	self.speed = 0;
+
+	self.style = self.impulse;
+	self.impulse = 0;
+
+	if (self.spawnflags & 4)
+		self.style = zeroconvertdefault (self.style, 7);
+
+	self.rand = self.wait;
+	self.wait = self.delay;
+	self.delay = 0;
+	self.rand -= self.wait;
+
+	target_sound ();
+}
+
+void () play_sound =
+{
+	// convert to copper target_sound
+
+	self.wait = zeroconvertdefault (self.wait, 20);
+	self.delay = zeroconvertdefault (self.delay, 2);
+
+	play_sound_triggered ();
+
+	self.use ();
+}
+
+//============================================================================
+
+void () random_thunder =
+{
+	self.noise = "ambience/thunder1.wav";
+	play_sound ();
+	self.style = 6;
+}
+
+void () random_thunder_triggered =
+{
+	self.noise = "ambience/thunder1.wav";
+	play_sound_triggered ();
+	self.style = 6;
+}
+
+#endif /* HIPNOTIC */
 
 //============================================================================
 
